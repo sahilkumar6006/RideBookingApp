@@ -1,49 +1,55 @@
-import React, { useRef } from 'react';
-import { View, TextInput, StyleSheet } from 'react-native';
+import React, { useRef } from "react";
+import { StyleSheet, TextInput, View } from "react-native";
 
-const OTPInput = ({ length = 6, otp, setOtp, isOtpValid }) => {
-  const inputs = useRef([]);
-
-  const handleChange = (value, index) => {
-    const newOtp = [...otp];
-    if (value === '') {
-      newOtp[index] = '';
-    } else if (!isNaN(value)) {
-      newOtp[index] = value;
-      if (index < length - 1) {
-        inputs.current[index + 1].focus();
+export const OtpCodeBlock = ({
+  inputRef,
+  value,
+  handleChange,
+  index,
+  handleKeyPress,
+}) => {
+  return (
+    <TextInput
+      maxLength={1}
+      keyboardType="number-pad"
+      ref={inputRef}
+      multiline={false}
+      onKeyPress={({ nativeEvent }) =>
+        handleKeyPress({ nativeEvent }, index + 1)
       }
-    }
-    setOtp(newOtp);
+      value={value}
+      onChangeText={(text) => handleChange(text, index)}
+      style={styles.otpCodeBlock}
+    />
+  );
+};
+
+export const OtpInput = ({ code = ["", "", "", "", "", ""], style, fn }) => {
+  const refs = Array.from({ length: 6 }, () => useRef(null));
+
+  const handleChange = (num, index) => {
+    const number = num.replace(/\D/g, "");
+    fn((prev) => prev.map((v, i) => (i === index ? number : v.toString())));
   };
 
-  const handleKeyPress = (event, index) => {
-    if (event.nativeEvent.key === 'Backspace' && otp[index] === '') {
-      if (index > 0) {
-        inputs.current[index - 1].focus();
-      }
-    } else if (event.nativeEvent.key === 'Backspace') {
-      handleChange('', index);
+  const handleKeyPress = ({ nativeEvent }, position) => {
+    if (nativeEvent.key === "Backspace" && position > 1) {
+      refs[position - 2]?.current?.focus();
+    } else if (!isNaN(parseInt(nativeEvent.key, 10)) && position < 6) {
+      refs[position]?.current?.focus();
     }
   };
 
   return (
-    <View style={styles.otpContainer}>
-      {otp.map((digit, index) => (
-        <TextInput
-          key={index}
-          ref={(ref) => (inputs.current[index] = ref)}
-          value={digit}
-          onChangeText={(value) => handleChange(value, index)}
-          onKeyPress={(event) => handleKeyPress(event, index)}
-          style={[
-            styles.input,
-            digit ? styles.inputFilled : null, 
-            !isOtpValid && styles.inputInvalid,
-          ]}
-          keyboardType="numeric"
-          maxLength={1}
-          textAlign="center"
+    <View style={[styles.container, style]}>
+      {refs.map((ref, index) => (
+        <OtpCodeBlock
+          key={index.toString()}
+          index={index}
+          inputRef={ref}
+          value={code[index]}
+          handleChange={handleChange}
+          handleKeyPress={handleKeyPress}
         />
       ))}
     </View>
@@ -51,29 +57,22 @@ const OTPInput = ({ length = 6, otp, setOtp, isOtpValid }) => {
 };
 
 const styles = StyleSheet.create({
-  otpContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
- alignItems:'center',
-    marginTop: 3,
-    alignSelf:'center'
+  container: {
+    flexDirection: "row",
+    marginVertical: 30,
   },
-  input: {
-    width: 11,
-    height: 6,
-    borderWidth: 1,
-    borderRadius: 10,
-    // borderColor: Colors.lightgrey,
-    marginRight: 10,
-    // fontSize: responsiveFontSize(2),
-    // color: Colors.black,
-  },
-  inputFilled: {
-    // borderColor: Colors.black,
-  },
-  inputInvalid: {
-    // borderColor: Colors.red,
+  otpCodeBlock: {
+    fontSize: 20,
+    textAlignVertical: "center",
+    borderRadius: 8,
+    width: 42,
+    height: 46,
+    color: "#000000",
+    marginHorizontal: 6,
+    backgroundColor: "#EBEBEB",
+    paddingLeft: 15,
+    textAlign: "center",
   },
 });
 
-export default OTPInput;
+export default OtpInput;

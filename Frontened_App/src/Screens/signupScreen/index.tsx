@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -7,58 +7,62 @@ import {
   TouchableOpacity,
   Alert,
   ActivityIndicator,
-} from 'react-native';
-import { Picker } from '@react-native-picker/picker';
-import Apple from '../../assets/images/svg/Apple.svg';
-import Facebook from '../../assets/images/svg/Facebook.svg';
-import Gmail from '../../assets/images/svg/Gmail.svg';
-import { useNavigation } from '@react-navigation/native';
-import axios from 'axios';
+} from "react-native";
+import { Picker } from "@react-native-picker/picker";
+import Apple from "../../assets/images/svg/Apple.svg";
+import Facebook from "../../assets/images/svg/Facebook.svg";
+import Gmail from "../../assets/images/svg/Gmail.svg";
+import { useNavigation } from "@react-navigation/native";
+import axios from "axios";
 
 const SignUpScreen = () => {
   const navigation = useNavigation();
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [gender, setGender] = useState('');
-  const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [gender, setGender] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSignup = async () => {
-    if (!fullName || !email || !phone || !gender ) {
-      Alert.alert('Error', 'Please fill in all fields.');
-      return;
-    }
+    navigation.navigate("Otp");
+    // if (!fullName || !email || !phone || !gender ) {
+    //   Alert.alert('Error', 'Please fill in all fields.');
+    //   return;
+    // }
 
+    // try {
+    // const response = await axios.post('http://192.168.46.131:8000/api/v1/users/register', {
+    //     fullName,
+    //     email,
+    //     phone,
+    //     gender,
+    //   }, {
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //     },
+    //   });
 
-    try {
-      const response = await axios.post('http://192.168.46.131:8000/api/v1/users/register', {
-        fullName,
-        email,
-        phone,
-        gender,
-      }, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-    
-      console.log('Success:', response.data);
-    } catch (error) {
-      console.error('Error:', error.response ? error.response.data : error.message);
-    }
-    
+    //   console.log('Success:', response.data);
+    // } catch (error) {
+    //   console.error('Error:', error.response ? error.response.data : error.message);
+    // }
   };
 
   return (
     <View style={styles.container}>
       {/* Back Button */}
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => navigation.goBack()}
+      >
         <Text style={styles.backText}>‹ Back</Text>
       </TouchableOpacity>
 
       {/* Header */}
-      <Text style={styles.headerText}>Sign up with your email or phone number</Text>
+      <Text style={styles.headerText}>
+        Sign up with your email or phone number
+      </Text>
 
       {/* Input Fields */}
       <TextInput
@@ -101,13 +105,17 @@ const SignUpScreen = () => {
 
       {/* Terms */}
       <Text style={styles.termsText}>
-        By signing up, you agree to the{' '}
-        <Text style={styles.linkText}>Terms of Service</Text> and{' '}
+        By signing up, you agree to the{" "}
+        <Text style={styles.linkText}>Terms of Service</Text> and{" "}
         <Text style={styles.linkText}>Privacy Policy</Text>.
       </Text>
 
       {/* Sign-Up Button */}
-      <TouchableOpacity style={styles.signUpButton} onPress={handleSignup} disabled={isLoading}>
+      <TouchableOpacity
+        style={styles.signUpButton}
+        onPress={handleSignup}
+        disabled={isLoading}
+      >
         {isLoading ? (
           <ActivityIndicator size="small" color="#FFF" />
         ) : (
@@ -134,8 +142,11 @@ const SignUpScreen = () => {
 
       {/* Footer */}
       <Text style={styles.footerText}>
-        Already have an account?{' '}
-        <Text style={styles.linkText} onPress={() => navigation.navigate('Login')}>
+        Already have an account?{" "}
+        <Text
+          style={styles.linkText}
+          onPress={() => navigation.navigate("Login")}
+        >
           Sign in
         </Text>
       </Text>
@@ -146,7 +157,7 @@ const SignUpScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: "#FFFFFF",
     padding: 20,
   },
   backButton: {
@@ -154,74 +165,74 @@ const styles = StyleSheet.create({
   },
   backText: {
     fontSize: 16,
-    color: '#000',
+    color: "#000",
   },
   headerText: {
     fontSize: 18,
-    fontWeight: 'bold',
-    color: '#000',
+    fontWeight: "bold",
+    color: "#000",
     marginBottom: 20,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#E5E5E5',
+    borderColor: "#E5E5E5",
     borderRadius: 8,
     padding: 10,
     fontSize: 14,
     marginBottom: 15,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: "#F9F9F9",
   },
   picker: {
     borderWidth: 1,
-    borderColor: '#E5E5E5',
+    borderColor: "#E5E5E5",
     borderRadius: 8,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: "#F9F9F9",
     marginBottom: 15,
   },
   termsText: {
     fontSize: 12,
-    color: '#7A7A7A',
+    color: "#7A7A7A",
     marginBottom: 20,
   },
   linkText: {
-    color: '#28A745',
-    fontWeight: 'bold',
+    color: "#28A745",
+    fontWeight: "bold",
   },
   signUpButton: {
-    backgroundColor: '#28A745',
+    backgroundColor: "#28A745",
     paddingVertical: 15,
     borderRadius: 8,
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 15,
   },
   signUpButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   orText: {
-    textAlign: 'center',
-    color: '#7A7A7A',
+    textAlign: "center",
+    color: "#7A7A7A",
     marginVertical: 10,
   },
   socialButton: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    flexDirection: "row",
+    justifyContent: "center",
     borderWidth: 1,
-    borderColor: '#E5E5E5',
+    borderColor: "#E5E5E5",
     borderRadius: 8,
     paddingVertical: 15,
-    alignItems: 'center',
+    alignItems: "center",
     marginBottom: 10,
-    backgroundColor: '#F9F9F9',
+    backgroundColor: "#F9F9F9",
   },
   socialButtonText: {
     marginLeft: 10,
-    color: '#000',
+    color: "#000",
   },
   footerText: {
-    textAlign: 'center',
-    color: '#7A7A7A',
+    textAlign: "center",
+    color: "#7A7A7A",
     marginTop: 20,
   },
 });
