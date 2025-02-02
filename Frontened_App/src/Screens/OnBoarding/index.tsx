@@ -5,7 +5,7 @@ import Swiper from "react-native-swiper";
 
 const Onboarding = () => {
   const navigation = useNavigation();
-  const swiperRef = useRef(null); // Create a ref for Swiper
+  const swiperRef = useRef(null); 
 
   const data = [
     {

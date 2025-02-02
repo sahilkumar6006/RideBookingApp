@@ -1,24 +1,24 @@
-import { useNavigation } from '@react-navigation/native';
-import React from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { useNavigation } from "@react-navigation/native";
+import React from "react";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 
 const WelcomeScreen = () => {
-    const navigation = useNavigation();
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
-      {/* Illustration */}
       <Image
-        source={require('../../assets/images/Welcome.png')} 
+        source={require("../../assets/images/Welcome.png")}
         style={styles.image}
         resizeMode="contain"
       />
 
-      {/* Welcome Text */}
       <Text style={styles.title}>Welcome</Text>
       <Text style={styles.subtitle}>Have a better sharing experience</Text>
 
-      {/* Buttons */}
-      <TouchableOpacity style={styles.createAccountButton} onPress={() => navigation.navigate('SignUpScreen')}>
+      <TouchableOpacity
+        style={styles.createAccountButton}
+        onPress={() => navigation.navigate("SignUpScreen")}
+      >
         <Text style={styles.createAccountButtonText}>Create an account</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.loginButton}>
@@ -31,9 +31,9 @@ const WelcomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#FFFFFF",
     paddingHorizontal: 20,
   },
   image: {
@@ -43,39 +43,39 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
-    color: '#000',
+    fontWeight: "bold",
+    color: "#000",
     marginBottom: 10,
   },
   subtitle: {
     fontSize: 16,
-    color: '#7A7A7A',
+    color: "#7A7A7A",
     marginBottom: 40,
-    textAlign: 'center',
+    textAlign: "center",
   },
   createAccountButton: {
-    backgroundColor: '#28A745', // Green color
+    backgroundColor: "#28A745", // Green color
     paddingVertical: 15,
     paddingHorizontal: 60,
     borderRadius: 8,
     marginBottom: 15,
   },
   createAccountButtonText: {
-    color: '#FFFFFF',
+    color: "#FFFFFF",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   loginButton: {
-    borderColor: '#28A745', // Green border
+    borderColor: "#28A745", // Green border
     borderWidth: 1,
     paddingVertical: 15,
     paddingHorizontal: 60,
     borderRadius: 8,
   },
   loginButtonText: {
-    color: '#28A745',
+    color: "#28A745",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
 });
 
