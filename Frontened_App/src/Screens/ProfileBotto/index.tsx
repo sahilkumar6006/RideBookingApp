@@ -97,10 +97,14 @@ const styles = StyleSheet.create({
     },
     avatarContainer: {
         position: 'relative',
-        backgroundColor: 'black',
-        width: 200,
-        height: 200,
-        borderRadius: 100
+        backgroundColor: '#fff',
+        width: 120,
+        height: 120,
+        borderRadius: 60,
+        borderWidth: 1,
+        borderColor: '#E0E0E0',
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     avatar: {
         width: 100,

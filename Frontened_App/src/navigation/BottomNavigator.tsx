@@ -5,9 +5,11 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../Screens/Home';
 import Wallet from '../Screens/Wallet';
 import Offer from '../Screens/Offer';
-import HomeIcon from '../assets/images/svg/Home.svg';
+  import HomeIcon from '../assets/images/svg/Home.svg';
+import Heart from '../assets/images/svg/Heart.svg';
 import Vector from '../assets/images/svg/Vector.svg';
 import WalletIcon from '../assets/images/svg/wallet.svg';
+import Discount from '../assets/images/svg/Discount.svg';
 import Favourite from '../Screens/Favourite/index'
 import ProfileScreen from '../Screens/ProfileBotto';
 const Tab = createBottomTabNavigator();
@@ -51,7 +53,7 @@ export default function BTabNavigation() {
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <Vector fill={focused ? '#28A745' : '#7A7A7A'} />
+            <Heart fill={focused ? '#28A745' : '#7A7A7A'} />
           ),
         }}
       />
@@ -75,7 +77,7 @@ export default function BTabNavigation() {
         options={{
           headerShown: false,
           tabBarIcon: ({ focused }) => (
-            <Vector fill={focused ? '#28A745' : '#7A7A7A'} />
+            <Discount fill={focused ? '#28A745' : '#7A7A7A'} />
           ),
         }}
       />
