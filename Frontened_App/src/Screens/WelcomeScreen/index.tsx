@@ -10,6 +10,7 @@ const WelcomeScreen = () => {
         source={require("../../assets/images/Welcome.png")}
         style={styles.image}
         resizeMode="contain"
+        
       />
 
       <Text style={styles.title}>Welcome</Text>

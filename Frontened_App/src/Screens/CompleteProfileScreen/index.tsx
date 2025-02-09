@@ -9,8 +9,9 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import Icon from "react-native-vector-icons/FontAwesome";
-
+import { useNavigation } from "@react-navigation/native";
 const CompleteProfileScreen = () => {
+  const navigation = useNavigation()
   const [selectedCity, setSelectedCity] = useState("");
   const [selectedDistrict, setSelectedDistrict] = useState("");
   return (
@@ -42,7 +43,7 @@ const CompleteProfileScreen = () => {
         keyboardType="email-address"
       />
       <TextInput style={styles.input} placeholder="Street" />
-      <Picker
+      {/* <Picker
         selectedValue={selectedCity}
         style={styles.picker}
         onValueChange={(itemValue) => setSelectedCity(itemValue)}
@@ -57,16 +58,16 @@ const CompleteProfileScreen = () => {
       >
         <Picker.Item label="Select District" value="" />
         <Picker.Item label="Gulshan" value="gulshan" />
-      </Picker>
+      </Picker> */}
       <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.cancelButton}>
+        <TouchableOpacity style={styles.cancelButton} onPress={() => navigation.navigate('BottomNavigation')}>
           <Text style={styles.cancelText}>Cancel</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.saveButton}>
+        <TouchableOpacity style={styles.saveButton} onPress={() => navigation.navigate('BottomNavigation')}>
           <Text style={styles.saveText}>Save</Text>
         </TouchableOpacity>
       </View>
-    </View>
+    </View >
   );
 };
 
