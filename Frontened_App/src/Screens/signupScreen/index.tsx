@@ -14,6 +14,7 @@ import Facebook from "../../assets/images/svg/Facebook.svg";
 import Gmail from "../../assets/images/svg/Gmail.svg";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 const SignUpScreen = () => {
   const navigation = useNavigation();
@@ -158,41 +159,41 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
-    padding: 20,
+    padding: scale(20),
   },
   backButton: {
-    marginBottom: 10,
+    marginBottom: verticalScale(10),
   },
   backText: {
-    fontSize: 16,
+    fontSize: scale(16),
     color: "#000",
   },
   headerText: {
-    fontSize: 18,
+    fontSize: scale(18),
     fontWeight: "bold",
     color: "#000",
-    marginBottom: 20,
+    marginBottom: verticalScale(20),
   },
   input: {
-    borderWidth: 1,
+    borderWidth: scale(1),
     borderColor: "#E5E5E5",
-    borderRadius: 8,
-    padding: 10,
-    fontSize: 14,
-    marginBottom: 15,
+    borderRadius: scale(8),
+    padding: scale(10),
+    fontSize: scale(14),
+    marginBottom: verticalScale(15),
     backgroundColor: "#F9F9F9",
   },
   picker: {
-    borderWidth: 1,
+    borderWidth: scale(1),
     borderColor: "#E5E5E5",
-    borderRadius: 8,
+    borderRadius: scale(8),
     backgroundColor: "#F9F9F9",
-    marginBottom: 15,
+    marginBottom: verticalScale(15),
   },
   termsText: {
-    fontSize: 12,
+    fontSize: scale(12),
     color: "#7A7A7A",
-    marginBottom: 20,
+    marginBottom: verticalScale(20),
   },
   linkText: {
     color: "#28A745",
@@ -200,40 +201,40 @@ const styles = StyleSheet.create({
   },
   signUpButton: {
     backgroundColor: "#28A745",
-    paddingVertical: 15,
-    borderRadius: 8,
+    paddingVertical: verticalScale(15),
+    borderRadius: scale(8),
     alignItems: "center",
-    marginBottom: 15,
+    marginBottom: verticalScale(15),
   },
   signUpButtonText: {
     color: "#FFFFFF",
-    fontSize: 16,
+    fontSize: scale(16),
     fontWeight: "bold",
   },
   orText: {
     textAlign: "center",
     color: "#7A7A7A",
-    marginVertical: 10,
+    marginVertical: verticalScale(10),
   },
   socialButton: {
     flexDirection: "row",
     justifyContent: "center",
-    borderWidth: 1,
+    borderWidth: scale(1),
     borderColor: "#E5E5E5",
-    borderRadius: 8,
-    paddingVertical: 15,
+    borderRadius: scale(8),
+    paddingVertical: verticalScale(5),
     alignItems: "center",
-    marginBottom: 10,
+    marginBottom: verticalScale(10),
     backgroundColor: "#F9F9F9",
   },
   socialButtonText: {
-    marginLeft: 10,
+    marginLeft: scale(10),
     color: "#000",
   },
   footerText: {
     textAlign: "center",
     color: "#7A7A7A",
-    marginTop: 20,
+    marginTop: verticalScale(20),
   },
 });
 
