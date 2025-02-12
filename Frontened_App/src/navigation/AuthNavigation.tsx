@@ -8,6 +8,7 @@ import Otp from "../Screens/Otp";
 import BottomNavigator from "./BottomNavigator";
 import SetPasswordScreen from "../Screens/setPasswordScreen";
 import CompleteProfileScreen from "../Screens/CompleteProfileScreen";
+import DrawerNavigator from "./DrawerNavigator";
 
 const Stack = createStackNavigator();
 
@@ -29,7 +30,7 @@ export default function AuthNavigation() {
           name="CompleteProfileScreen"
           component={CompleteProfileScreen}
         />
-        <Stack.Screen name="BottomNavigation" component={BottomNavigator} />
+        <Stack.Screen name="BottomNavigation" component={DrawerNavigator} />
       </Stack.Navigator>
     </NavigationContainer>
   );

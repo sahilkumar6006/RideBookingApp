@@ -2,14 +2,14 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import ImagePickerComponent from '@/src/components/ImagePickerComponent';
+import ImagePickerComponent from '../../components/ImagePickerComponent';
 
 const ProfileScreen = () => {
     const navigation = useNavigation();
     return (
         <View style={styles.container}>
             <View style={styles.header}>
-                <TouchableOpacity style={styles.menuButton}>
+                <TouchableOpacity style={styles.menuButton} onPress={() => navigation.openDrawer()}>
                     <Ionicons name="menu" size={24} color="#4CAF50" />
                 </TouchableOpacity>
                 <Text style={styles.title}>Profile</Text>
@@ -20,7 +20,8 @@ const ProfileScreen = () => {
                     {/* <Image
                         source={require('../../assets/avatar.png')}
                         style={styles.avatar}
-                    /> */}<ImagePickerComponent selectedImage={undefined} setSelectedImage={undefined} />
+                    /> */}
+                    <ImagePickerComponent selectedImage={undefined} setSelectedImage={undefined} />
                 </View>
 
                 <Text style={styles.userName}>Nate Samson</Text>

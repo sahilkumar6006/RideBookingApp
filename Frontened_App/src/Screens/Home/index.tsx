@@ -1,8 +1,10 @@
+// Frontened_App/src/Screens/Home/index.tsx
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Alert, TouchableOpacity, TextInput } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native'; // Import useNavigation
 
 interface LocationType {
   latitude: number;
@@ -10,8 +12,8 @@ interface LocationType {
 }
 
 const Home = () => {
+  const navigation = useNavigation(); // Get navigation object
   const [currentLocation, setCurrentLocation] = useState<LocationType | null>(null);
-  const [coordinates, setCoordinates] = useState<LocationType>({ latitude: 0, longitude: 0 });
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState('');
   const [activeTab, setActiveTab] = useState('transport');
@@ -46,8 +48,12 @@ const Home = () => {
 
   return (
     <View style={styles.container}>
-      {/* Rental Button */}
-
+      {/* Button to Open Drawer */}
+      <View style={styles.drawerButtonContainer}>
+        <TouchableOpacity onPress={() => navigation.openDrawer()}>
+          <Ionicons name="menu" size={24} color="white" />
+        </TouchableOpacity>
+      </View>
 
       {/* Map View */}
       <MapView
@@ -116,7 +122,6 @@ const Home = () => {
             </TouchableOpacity>
           </View>
         </View>
-
       </View>
     </View>
   );
@@ -126,6 +131,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  drawerButtonContainer: {
+    position: 'absolute',
+    top: 40, // Adjust as needed
+    left: 16, // Adjust as needed
+    zIndex: 1, // Ensure it appears above the map
+    backgroundColor: 'red',
   },
   header: {
     flexDirection: 'row',
@@ -155,7 +167,6 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: 'rgba(76, 175, 80, 0.1)',
     borderRadius: 16,
-
   },
   searchBar: {
     flexDirection: 'row',
@@ -202,7 +213,6 @@ const styles = StyleSheet.create({
   map: {
     flex: 1,
   },
-  // ... existing loading styles if needed ...
 });
 
 export default Home;
