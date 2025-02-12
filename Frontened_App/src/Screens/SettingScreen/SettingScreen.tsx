@@ -1,6 +1,7 @@
 // src/SettingsScreen.js
 import React from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { verticalScale, scale } from 'react-native-size-matters';
 
 const SettingsScreen = () => {
     return (
@@ -23,11 +24,11 @@ const SettingsScreen = () => {
                     <Text>Delete Account</Text>
                 </TouchableOpacity>
             </View>
-            <Text style={styles.subHeader}>Change Password</Text>
+            {/* <Text style={styles.subHeader}>Change Password</Text>
             <TextInput style={styles.input} placeholder="Old Password" secureTextEntry />
             <TextInput style={styles.input} placeholder="New Password" secureTextEntry />
             <TextInput style={styles.input} placeholder="Confirm Password" secureTextEntry />
-            <Button title="Save" onPress={() => { }} />
+            <Button title="Save" onPress={() => { }} /> */}
         </View>
     );
 };
@@ -35,7 +36,8 @@ const SettingsScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
+        padding: scale(20),
+        marginTop: verticalScale(50),
         backgroundColor: '#fff',
     },
     header: {

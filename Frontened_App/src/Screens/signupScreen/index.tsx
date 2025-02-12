@@ -159,7 +159,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
-    padding: scale(20),
+    paddingTop: scale(20),
+    paddingHorizontal: scale(20),
   },
   backButton: {
     marginBottom: verticalScale(10),
@@ -169,7 +170,7 @@ const styles = StyleSheet.create({
     color: "#000",
   },
   headerText: {
-    fontSize: scale(18),
+    fontSize: scale(12),
     fontWeight: "bold",
     color: "#000",
     marginBottom: verticalScale(20),

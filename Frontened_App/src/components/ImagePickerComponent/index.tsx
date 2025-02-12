@@ -61,7 +61,7 @@ const ImagePickerComponent = ({ selectedImage, setSelectedImage }) => {
                     text: 'Gallery',
                     onPress: async () => {
                         let result = await ImagePicker.launchImageLibraryAsync({
-                            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                            mediaTypes: ImagePicker.getPendingResultAsync.Images, // Fixed to use MediaTypeOptions
                             allowsEditing: true,
                             aspect: [4, 3],
                             quality: 1,
@@ -92,8 +92,7 @@ const ImagePickerComponent = ({ selectedImage, setSelectedImage }) => {
             {selectedImage ? (
                 <Image source={{ uri: selectedImage }} style={styles.profileImage} />
             ) : (
-            //    <Image source={images.prflPic}/>
-            <Text>hello</Text>
+                <Image source={require('../../assets/images/svg/Profile.svg')} style={styles.profileImage} />
             )}
             {/* <EDITicon style={styles.editIconOverlay} /> */}
         </TouchableOpacity>
@@ -116,9 +115,8 @@ const styles = StyleSheet.create({
         borderRadius: 35,
         width: 50,
         height: 50,
-        shadowColor: Colors.grey,
         shadowOffset: { width: 2, height: 3 },
-        shadowOpacity: 3,
+        shadowOpacity: 0.3,
         shadowRadius: 2,
         elevation: 5,
         alignSelf: 'center',

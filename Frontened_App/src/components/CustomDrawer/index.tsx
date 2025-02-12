@@ -26,10 +26,12 @@ const CustomDrawer = (props) => {
                         { label: "Complain", icon: "alert-circle" },
                         { label: "Referral", icon: "users" },
                         { label: "About Us", icon: "info" },
-                        { label: "Settings", icon: "settings" },
+                        { label: "SettingsScreen", icon: "settings" },
                         { label: "Help and Support", icon: "help-circle" },
                     ].map((item, index) => (
-                        <TouchableOpacity key={index} style={{ flexDirection: "row", alignItems: "center", paddingVertical: 10 }}>
+                        <TouchableOpacity key={index} style={{ flexDirection: "row", alignItems: "center", paddingVertical: 10 }}
+                            onPress={() => props.navigation.navigate(item.label)}
+                        >
                             <Icon name={item.icon} size={20} color="black" style={{ marginRight: 10 }} />
                             <Text style={{ fontSize: 16 }}>{item.label}</Text>
                         </TouchableOpacity>
