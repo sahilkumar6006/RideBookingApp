@@ -8,6 +8,9 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { verticalScale } from "react-native-size-matters";
+import CommonHeader from "@/src/components/Header.tsx";
+import ScreenWrapper from "@/src/components/ScreenWrapper";
 
 const SetPasswordScreen = () => {
   const [password, setPassword] = useState("");
@@ -17,10 +20,7 @@ const SetPasswordScreen = () => {
 
   const navigation = useNavigation();
   return (
-    <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton}>
-        <Ionicons name="arrow-back" size={24} color="black" />
-      </TouchableOpacity>
+    <ScreenWrapper children={undefined} onBackPress={undefined} containerStyle={undefined} headerRight={undefined}>
       <Text style={styles.title}>Set password</Text>
       <Text style={styles.subtitle}>Set your password</Text>
 
@@ -72,14 +72,13 @@ const SetPasswordScreen = () => {
       >
         <Text style={styles.registerText}>Register</Text>
       </TouchableOpacity>
-    </View>
+    </ScreenWrapper>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
     backgroundColor: "#fff",
   },
   backButton: {

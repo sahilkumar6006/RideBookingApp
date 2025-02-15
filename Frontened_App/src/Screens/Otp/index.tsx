@@ -11,6 +11,7 @@ import {
 } from "react-native";
 import OTPInput, { OtpCodeBlock, OtpInput } from "../../components/OTPInput";
 import BackIcon from "../../assets/images/svg/BackIcon.svg";
+import { Colors } from "@/src/constants/colors";
 
 const VerifyOtpScreen = () => {
   const navigation = useNavigation();
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   button: {
-    backgroundColor: "#008955",
+    backgroundColor: Colors.green[500],
     padding: 15,
     borderRadius: 5,
     width: "100%",

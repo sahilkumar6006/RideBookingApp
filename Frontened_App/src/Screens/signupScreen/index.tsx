@@ -15,6 +15,8 @@ import Gmail from "../../assets/images/svg/Gmail.svg";
 import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import CommonHeader from "@/src/components/Header.tsx";
+import ScreenWrapper from "@/src/components/ScreenWrapper";
 
 const SignUpScreen = () => {
   const navigation = useNavigation();
@@ -51,15 +53,8 @@ const SignUpScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <ScreenWrapper children={undefined} onBackPress={undefined} containerStyle={undefined} headerRight={undefined}>
       {/* Back Button */}
-      <TouchableOpacity
-        style={styles.backButton}
-        onPress={() => navigation.goBack()}
-      >
-        <Text style={styles.backText}>‹ Back</Text>
-      </TouchableOpacity>
-
       {/* Header */}
       <Text style={styles.headerText}>
         Sign up with your email or phone number
@@ -151,7 +146,7 @@ const SignUpScreen = () => {
           Sign in
         </Text>
       </Text>
-    </View>
+    </ScreenWrapper>
   );
 };
 
@@ -159,14 +154,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#FFFFFF",
-    paddingTop: scale(20),
+    paddingTop: scale(80),
     paddingHorizontal: scale(20),
   },
   backButton: {
-    marginBottom: verticalScale(10),
+    marginBottom: verticalScale(30),
   },
   backText: {
-    fontSize: scale(16),
+    fontSize: verticalScale(12),
     color: "#000",
   },
   headerText: {
@@ -202,7 +197,7 @@ const styles = StyleSheet.create({
   },
   signUpButton: {
     backgroundColor: "#28A745",
-    paddingVertical: verticalScale(15),
+    paddingVertical: verticalScale(8),
     borderRadius: scale(8),
     alignItems: "center",
     marginBottom: verticalScale(15),

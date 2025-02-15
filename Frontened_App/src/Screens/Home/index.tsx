@@ -1,11 +1,11 @@
-// Frontened_App/src/Screens/Home/index.tsx
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Alert, TouchableOpacity, TextInput } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { Ionicons } from '@expo/vector-icons';
-import { useNavigation } from '@react-navigation/native'; // Import useNavigation
-import { scale, verticalScale } from 'react-native-size-matters';
+import { useNavigation } from '@react-navigation/native';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import { Colors } from '@/src/constants/colors';
 
 interface LocationType {
   latitude: number;
@@ -13,7 +13,7 @@ interface LocationType {
 }
 
 const Home = () => {
-  const navigation = useNavigation(); // Get navigation object
+  const navigation = useNavigation();
   const [currentLocation, setCurrentLocation] = useState<LocationType | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState('');
@@ -49,13 +49,6 @@ const Home = () => {
 
   return (
     <View style={styles.container}>
-      {/* Button to Open Drawer */}
-      <View style={styles.drawerButtonContainer}>
-        <TouchableOpacity onPress={() => navigation.openDrawer()}>
-          <Ionicons name="menu" size={24} color="white" />
-        </TouchableOpacity>
-      </View>
-
       {/* Map View */}
       <MapView
         style={styles.map}
@@ -76,21 +69,32 @@ const Home = () => {
         )}
       </MapView>
 
-      <View style={{ position: 'absolute', alignItems: 'flex-end', marginTop: 500 }}>
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.rentalButton}>
-            <Text style={styles.rentalButtonText}>Rental</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.locationButton}>
-            <Ionicons name="location" size={24} color="#666" />
-          </TouchableOpacity>
-        </View>
+      {/* Top Icons */}
+      <View style={styles.topIconsContainer}>
+        <TouchableOpacity style={styles.iconButton} onPress={() => navigation.openDrawer()}>
+          <Ionicons name="menu" size={24} color={Colors.green[200]} />
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.iconButton}>
+          <Ionicons name="notifications-outline" size={24} color={Colors.green[200]} />
+        </TouchableOpacity>
+      </View>
+
+      {/* Main Content Container */}
+      <View style={styles.contentContainer}>
+        {/* Rental Button */}
+        <TouchableOpacity style={styles.rentalButton}>
+          <Text style={styles.rentalButtonText}>Rental</Text>
+        </TouchableOpacity>
+
+        {/* Location Button */}
+        <TouchableOpacity style={styles.locationButton}>
+          <Ionicons name="location" size={moderateScale(24)} color={Colors.green[200]} />
+        </TouchableOpacity>
 
         {/* Search Container */}
         <View style={styles.searchContainer}>
-          {/* Search Bar */}
           <View style={styles.searchBar}>
-            <Ionicons name="search" size={20} color="#666" style={styles.searchIcon} />
+            <Ionicons name="search" size={moderateScale(20)} color="#666" />
             <TextInput
               style={styles.searchInput}
               placeholder="Where would you go?"
@@ -99,11 +103,10 @@ const Home = () => {
               placeholderTextColor="#999"
             />
             <TouchableOpacity>
-              <Ionicons name="heart-outline" size={20} color="#666" />
+              <Ionicons name="heart-outline" size={moderateScale(20)} color="#666" />
             </TouchableOpacity>
           </View>
 
-          {/* Toggle Buttons */}
           <View style={styles.toggleContainer}>
             <TouchableOpacity
               style={[styles.toggleButton, activeTab === 'transport' && styles.activeToggle]}
@@ -124,6 +127,33 @@ const Home = () => {
           </View>
         </View>
       </View>
+
+      {/* Bottom Tab Bar
+      <View style={styles.bottomTabBar}>
+        <TouchableOpacity style={styles.tabItem}>
+          <Ionicons name="home" size={moderateScale(24)} color={Colors.green[200]} />
+          <Text style={styles.tabText}>Home</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.tabItem}>
+          <Ionicons name="heart-outline" size={moderateScale(24)} color="#666" />
+          <Text style={styles.tabText}>Favourite</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.tabItem}>
+          <View style={styles.walletButton}>
+            <Ionicons name="wallet-outline" size={moderateScale(24)} color="#fff" />
+          </View>
+          // <Text style={styles.tabText}>Wallet</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.tabItem}>
+          <Ionicons name="gift-outline" size={moderateScale(24)} color="#666" />
+          <Text style={styles.tabText}>Offer</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.tabItem}>
+          <Ionicons name="person-outline" size={moderateScale(24)} color="#666" />
+          <Text style={styles.tabText}>Profile</Text>
+        </TouchableOpacity>
+      </View>
+    </View> */}
     </View>
   );
 };
@@ -133,86 +163,113 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
-  drawerButtonContainer: {
-    position: 'absolute',
-    top: verticalScale(40), // Adjust as needed
-    left: scale(16), // Adjust as needed
-    zIndex: 1, // Ensure it appears above the map
-    backgroundColor: 'red',
+  map: {
+    flex: 1,
   },
-  header: {
+  topIconsContainer: {
+    position: 'absolute',
+    top: verticalScale(40),
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 48,
-    paddingBottom: 16,
+    paddingHorizontal: scale(16),
+  },
+  iconButton: {
+    padding: scale(8),
+    backgroundColor: '#fff',
+    borderRadius: scale(8),
+  },
+  contentContainer: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: verticalScale(20),
+    padding: scale(16),
   },
   rentalButton: {
-    backgroundColor: '#4CAF50',
-    paddingVertical: 10,
-    marginEnd: scale(300),
-    borderRadius: 8,
-    alignSelf: 'flex-start'
+    backgroundColor: Colors.green[200],
+    paddingVertical: verticalScale(10),
+    paddingHorizontal: scale(20),
+    borderRadius: scale(8),
+    alignSelf: 'flex-start',
+    marginBottom: verticalScale(16),
   },
   rentalButtonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: moderateScale(16),
     fontWeight: '600',
   },
   locationButton: {
-    padding: 8,
+    position: 'absolute',
+    right: scale(16),
+    backgroundColor: '#fff',
+    padding: scale(8),
+    borderRadius: scale(8),
   },
   searchContainer: {
-    margin: 16,
-    padding: 16,
-    backgroundColor: 'rgba(76, 175, 80, 0.1)',
-    borderRadius: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    borderRadius: scale(16),
+    padding: scale(16),
   },
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'white',
-    borderRadius: 8,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    marginBottom: 12,
-  },
-  searchIcon: {
-    marginRight: 8,
+    backgroundColor: '#f5f5f5',
+    borderRadius: scale(8),
+    paddingHorizontal: scale(12),
+    paddingVertical: verticalScale(8),
+    marginBottom: verticalScale(12),
   },
   searchInput: {
     flex: 1,
-    fontSize: 16,
+    fontSize: moderateScale(16),
+    marginLeft: scale(8),
     color: '#333',
-    paddingVertical: 8,
   },
   toggleContainer: {
     flexDirection: 'row',
-    width: 350,
-    backgroundColor: 'white',
-    borderRadius: 8,
-    padding: 4,
+    backgroundColor: '#f5f5f5',
+    borderRadius: scale(8),
+    padding: scale(4),
   },
   toggleButton: {
     flex: 1,
-    paddingVertical: 12,
-    borderRadius: 6,
+    paddingVertical: verticalScale(12),
+    borderRadius: scale(6),
     alignItems: 'center',
   },
   activeToggle: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: Colors.green[200],
   },
   toggleText: {
-    fontSize: 16,
+    fontSize: moderateScale(16),
     color: '#666',
     fontWeight: '500',
   },
   activeToggleText: {
     color: 'white',
   },
-  map: {
-    flex: 1,
+  bottomTabBar: {
+    flexDirection: 'row',
+    backgroundColor: '#fff',
+    paddingVertical: verticalScale(8),
+    borderTopWidth: 1,
+    borderTopColor: '#eee',
+    justifyContent: 'space-around',
+  },
+  tabItem: {
+    alignItems: 'center',
+  },
+  tabText: {
+    fontSize: moderateScale(12),
+    color: '#666',
+    marginTop: verticalScale(4),
+  },
+  walletButton: {
+    backgroundColor: Colors.green[200],
+    padding: scale(12),
+    borderRadius: scale(8),
   },
 });
 
