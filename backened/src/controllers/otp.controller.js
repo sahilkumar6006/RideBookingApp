@@ -2,28 +2,41 @@ import crypto from "crypto";
 import { OTP } from "../models/otp.model.js";
 
 const generateOtp = async (identifier) => {
-  const otp = crypto.randomInt(100000, 999999).toString(); // Generate a 6-digit OTP
-  const expiresAt = new Date(Date.now() + 5 * 60 * 1000); // Set expiry time to 5 minutes
+  const otp = Math.floor(100000 + Math.random() * 900000).toString(); // Generate a 6-digit OTP
+  const expiresAt = Date.now() + 10 * 60 * 1000; // OTP valid for 10 minutes
 
-  // Save OTP to the database
+  // Store OTP in the database
   await OTP.create({ identifier, otp, expiresAt });
 
+  // Send OTP via SMS or Email (implement your sending logic here)
   return otp;
 };
 
 
+const verifyOtpCheck = async (identifier, otp) => {
+  console.log("🔍 Checking OTP for identifier:", identifier);
+  console.log("🔍 Received OTP:", otp);
 
-const verifyOtp = async (identifier, otp) => {
-    const otpRecord = await OTP.findOne({ identifier, otp });
-  
-    if (!otpRecord) {
-      throw new Error("Invalid or expired OTP");
-    }
-  
-    // OTP is valid, delete it after verification
-    await OTP.deleteOne({ _id: otpRecord._id });
-  
-    return true;
-  };
+  // Find the OTP record for the identifier (phone or email)
+  const otpRecord = await OTP.findOne({
+    identifier: String(identifier),
+    otp: String(otp),
+  });
 
-export  { generateOtp , verifyOtp};
+  console.log("📝 Matched OTP Record:", otpRecord);
+
+  if (!otpRecord) {
+    throw new Error("Invalid OTP");
+  }
+
+  // Check if the OTP has expired
+  if (otpRecord.expiresAt < Date.now()) {
+    throw new Error("Expired OTP");
+  }
+
+  await OTP.deleteOne({ _id: otpRecord._id });
+  return true;
+};
+
+
+export  { generateOtp , verifyOtpCheck};
