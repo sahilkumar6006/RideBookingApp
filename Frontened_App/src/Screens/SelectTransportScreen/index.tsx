@@ -1,27 +1,35 @@
 // src/Screens/SelectTransportScreen.tsx
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import CarIcon from '../../assets/images/svg/Car.svg';
+import BikeIcon from '../../assets/images/svg/Bike.svg';
+import CycleIcon from '../../assets/images/svg/Cycle.svg';
+import WalletIcon from '../../assets/images/svg/Taxi.svg'; // Ensure the name matches the file
+import ScreenWrapper from '@/src/components/ScreenWrapper';
+import { scale } from 'react-native-size-matters';
 
 const transportOptions = [
-    { id: '1', name: 'Car', icon: require('../../assets/images/car.svg') }, // Add your icon images
-    { id: '2', name: 'Bike', icon: require('../../assets/images/bike.svg') },
-    { id: '3', name: 'Cycle', icon: require('../../assets/images/cycle.svg') },
-    { id: '4', name: 'Taxi', icon: require('../../assets/images/taxi.svg') },
+    { id: '1', name: 'Car' , icon: CarIcon}, // Add your icon images
+    { id: '2', name: 'Bike' , icon: BikeIcon},
+    { id: '3', name: 'Cycle' , icon: CycleIcon},
+    { id: '4', name: 'Taxi' , icon: WalletIcon},
 ];
 
-const SelectTransportScreen = () => {
+const SelectTransportScreen = ({ navigation }: { navigation: any }) => {
     return (
+        <ScreenWrapper children={undefined} onBackPress={undefined} containerStyle={undefined} headerRight={undefined}>
         <View style={styles.container}>
             <Text style={styles.header}>Select your transport</Text>
             <View style={styles.optionsContainer}>
                 {transportOptions.map((option) => (
-                    <TouchableOpacity key={option.id} style={styles.option}>
-                        <Image source={option.icon} style={styles.icon} />
+                    <TouchableOpacity key={option.id} style={styles.option} onPress={() => navigation.navigate('AvailableCarsScreen')}>
+                        <option.icon width={scale(60)} height={scale(70)} />
                         <Text style={styles.optionText}>{option.name}</Text>
                     </TouchableOpacity>
                 ))}
             </View>
         </View>
+        </ScreenWrapper>
     );
 };
 

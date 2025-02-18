@@ -82,12 +82,12 @@ const Home = () => {
       {/* Main Content Container */}
       <View style={styles.contentContainer}>
         {/* Rental Button */}
-        <TouchableOpacity style={styles.rentalButton}>
+        <TouchableOpacity style={styles.rentalButton}  onPress={() => navigation.navigate("SelectTransportScreen")}>
           <Text style={styles.rentalButtonText}>Rental</Text>
         </TouchableOpacity>
 
         {/* Location Button */}
-        <TouchableOpacity style={styles.locationButton}>
+        <TouchableOpacity style={styles.locationButton} onPress={() => navigation.navigate('LocationSelection')}>
           <Ionicons name="location" size={moderateScale(24)} color={Colors.green[200]} />
         </TouchableOpacity>
 
