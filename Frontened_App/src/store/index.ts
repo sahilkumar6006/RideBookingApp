@@ -1,47 +1,26 @@
-// src/store/index.ts
-import { createStore } from 'redux';
+// src/redux/store.ts
+import { configureStore } from '@reduxjs/toolkit';
 import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
-import { combineReducers } from 'redux';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import rootReducer from './reducers';
 
-// Define action types
-const TOGGLE_MODAL = 'TOGGLE_MODAL';
-
-// Define action creators
-export const toggleModal = () => ({
-    type: TOGGLE_MODAL,
-});
-
-// Define the initial state
-const initialState = {
-    isModalVisible: false,
-};
-
-// Create a reducer
-const modalReducer = (state = initialState, action: any) => {
-    switch (action.type) {
-        case TOGGLE_MODAL:
-            return { ...state, isModalVisible: !state.isModalVisible };
-        default:
-            return state;
-    }
-};
-
-// Combine reducers (if you have more than one)
-const rootReducer = combineReducers({
-    modal: modalReducer,
-});
-
-// Set up persistence
 const persistConfig = {
-    key: 'root',
-    storage,
+  key: 'root',
+  storage: AsyncStorage,
+  whitelist: ['auth', 'user'] // Specify which reducers to persist
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
-// Create the Redux store
-const store = createStore(persistedReducer);
-const persistor = persistStore(store);
+export const store = configureStore({
+  reducer: persistedReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: false,
+    }),
+});
 
-export { store, persistor };
+export const persistor = persistStore(store);
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;

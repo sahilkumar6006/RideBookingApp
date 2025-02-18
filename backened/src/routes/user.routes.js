@@ -27,6 +27,6 @@ router.route("/logout").post(authMiddleware, logout);
 
 // Profile routes
 router.route("/complete-profile").post(authMiddleware, completeProfile);
-router.route("/update-profile").put(authMiddleware, updateProfile);
+router.post('/completeProfile', authMiddleware, upload.single('profileImage'), completeProfile);
 
 export default router;
