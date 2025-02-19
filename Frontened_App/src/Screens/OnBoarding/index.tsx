@@ -1,6 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useRef } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity, Pressable } from "react-native";
 import Swiper from "react-native-swiper";
 
 const Onboarding = () => {
@@ -30,9 +30,12 @@ const Onboarding = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={{ marginTop: 40, alignSelf: "flex-end", padding: 10 }}>
+      <Pressable onPress={() => navigation.navigate("WelcomeScreen")}  style={{ marginTop: 40, alignSelf: "flex-end", padding: 10 }}>
+      <Text>
         Skip
       </Text>
+      </Pressable>
+     
 
       <Swiper
         ref={swiperRef} // Assign the ref to Swiper

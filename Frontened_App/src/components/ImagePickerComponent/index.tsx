@@ -5,6 +5,7 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import Colors from '../../Themes/Colors';
 import images from '../../Themes/Images';
 import { Text } from 'react-native';
+import Profie from "../../assets/images/svg/Profile.svg";
 
 const ImagePickerComponent = ({ selectedImage, setSelectedImage }) => {
     const [hasCameraPermission, setHasCameraPermission] = useState(null);
@@ -92,7 +93,7 @@ const ImagePickerComponent = ({ selectedImage, setSelectedImage }) => {
             {selectedImage ? (
                 <Image source={{ uri: selectedImage }} style={styles.profileImage} />
             ) : (
-                <Image source={require('../../assets/images/svg/Profile.svg')} style={styles.profileImage} />
+                <Profie style={styles.profileImage} />
             )}
             {/* <EDITicon style={styles.editIconOverlay} /> */}
         </TouchableOpacity>

@@ -17,6 +17,7 @@ import axios from "axios";
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import CommonHeader from "@/src/components/Header.tsx";
 import ScreenWrapper from "@/src/components/ScreenWrapper";
+import { post } from "@/src/api";
 
 const SignUpScreen = () => {
   const navigation = useNavigation();
@@ -26,32 +27,29 @@ const SignUpScreen = () => {
   const [gender, setGender] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
   const handleSignup = async () => {
-    navigation.navigate("Otp");
-    // if (!fullName || !email || !phone || !gender ) {
-    //   Alert.alert('Error', 'Please fill in all fields.');
-    //   return;
-    // }
-
-    // try {
-    // const response = await axios.post('http://192.168.46.131:8000/api/v1/users/register', {
-    //     fullName,
-    //     email,
-    //     phone,
-    //     gender,
-    //   }, {
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //   });
-
-    //   console.log('Success:', response.data);
-    // } catch (error) {
-    //   console.error('Error:', error.response ? error.response.data : error.message);
-    // }
+    // navigation.navigate("Otp"); // Commented out for now
+    if (!fullName || !email || !phone || !gender) {
+      Alert.alert('Error', 'Please fill in all fields.');
+      return;
+    }
+  
+    try {
+      const response = await post({
+        path: 'http://localhost:8000/api/v1/users/register', // Adjust the path as necessary
+        data: {
+          fullName,
+          email,
+          phone,
+          gender,
+        },
+      });
+      console.log('Success:', response);
+      navigation.navigate("Otp"); // Navigate after successful signup
+    } catch (error) {
+      console.error('Error:', error.response ? error.response.data : error.message);
+    }
   };
-
   return (
     <ScreenWrapper children={undefined} onBackPress={undefined} containerStyle={undefined} headerRight={undefined}>
       {/* Back Button */}
@@ -141,7 +139,7 @@ const SignUpScreen = () => {
         Already have an account?{" "}
         <Text
           style={styles.linkText}
-          onPress={() => navigation.navigate("Login")}
+          onPress={() => navigation.navigate("LoginScreen")}
         >
           Sign in
         </Text>

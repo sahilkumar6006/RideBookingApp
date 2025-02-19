@@ -1,6 +1,5 @@
 import axios, {AxiosResponse} from 'axios';
 import NetInfo from '@react-native-community/netinfo';
-import {getStoredTokens} from '../methods/tokens';
 import {store} from '../redux/store';
 import {
   buttonLoader,
@@ -9,12 +8,11 @@ import {
 } from '../redux/slices/activityIndicatorSlice';
 import {addGetResponse} from '../redux/slices/getResponseSlice';
 import {addParams, clearParams} from '../redux/slices/paramsSlice';
-import Api from './interface';
-import {addAlertData} from '../redux/slices/alertBoxSlice';
+import { getStoredTokens } from '../methods/tokens';
+import { showAlert } from '../redux/slices/alertSlice';
 
-export const BASE_URL = 'https://pre-api.nearkidukan.in';
-// export const BASE_URL =
-//   'https://a146-2405-201-5023-486e-311e-24b4-b3d6-ca0e.ngrok-free.app';
+export const BASE_URL = 'http://localhost:8000';
+
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -53,52 +51,57 @@ axiosInstance.interceptors.response.use(
 
     if (status === 401) {
       store.dispatch(
-        addAlertData({
+        showAlert({
           type: 'Alert',
           message:
             data?.message ||
             data?.error ||
             'Unauthorized Access. Please login again.',
+          onSuccess: undefined,
         }),
       );
     } else if (status === 404) {
       store.dispatch(
-        addAlertData({
+        showAlert({
           type: 'Alert',
           message:
             data?.message ||
             data?.error ||
             'Resource not found. Please check the URL or try again later.',
+          onSuccess: undefined,
         }),
       );
     } else if (status >= 400 && status < 500) {
       store.dispatch(
-        addAlertData({
+        showAlert({
           type: 'Alert',
           message:
             data?.message ||
             data?.error ||
             'An unexpected error occurred. Please try again.',
+          onSuccess: undefined,
         }),
       );
     } else if (status >= 500) {
       store.dispatch(
-        addAlertData({
+        showAlert({
           type: 'Alert',
           message:
             data?.message ||
             data?.error ||
             'Server Error. Please try again later.',
+          onSuccess: undefined,
         }),
       );
     } else {
       store.dispatch(
-        addAlertData({
+        showAlert({
           type: 'Alert',
           message:
             data?.message ||
             data?.error ||
             'An unexpected error occurred. Please try again.',
+          onSuccess: undefined,
         }),
       );
     }
@@ -158,7 +161,7 @@ const executeRequest = async <T,>(
     }
     if (response.data.message) {
       store.dispatch(
-        addAlertData({
+        showAlert({
           type: 'Message',
           message: response.data.message,
           onSuccess: onSuccess,
@@ -247,18 +250,16 @@ const post = async <T,>({
   data,
   isUrlEncoded = false,
   multipart = false,
-  onSuccess = () => {},
 }: {
   path: string;
   data?: any;
   isUrlEncoded?: boolean;
   multipart?: boolean;
-  onSuccess?: () => void;
 }) => {
   if (isUrlEncoded) {
     const body = new URLSearchParams();
     const keys = Object.keys(data);
-    keys.map((key) => {
+    keys.forEach((key) => {
       body.append(key, data[key]);
     });
     return executeRequest<Api & T>(
@@ -266,8 +267,7 @@ const post = async <T,>({
       path,
       body.toString(),
       multipart,
-      'post',
-      onSuccess,
+      'post'
     );
   }
   return executeRequest<Api & T>(
@@ -275,8 +275,7 @@ const post = async <T,>({
     path,
     data,
     multipart,
-    'post',
-    onSuccess,
+    'post'
   );
 };
 

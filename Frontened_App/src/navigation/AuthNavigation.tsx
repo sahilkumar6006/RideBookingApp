@@ -5,16 +5,17 @@ import OnBoarding from "../Screens/OnBoarding";
 import WelcomeScreen from "../Screens/WelcomeScreen";
 import SignUpScreen from "../Screens/signupScreen";
 import Otp from "../Screens/Otp";
-import BottomNavigator from "./BottomNavigator";
 import SetPasswordScreen from "../Screens/setPasswordScreen";
 import CompleteProfileScreen from "../Screens/CompleteProfileScreen";
 import DrawerNavigator from "./DrawerNavigator";
 import SettingsScreen from "../Screens/SettingScreen/SettingScreen";
 import LocationSelection from "../Screens/LocationSelection";
 import SelectTransportScreen from "../Screens/SelectTransportScreen";
-import AvailableTransport from "../Screens/AvailableTransport";
 import AvailableCarsScreen from "../Screens/AvailableTransport";
 import LoginScreen from "../Screens/Login";
+import ContactUsScreen from "../Screens/ContactUsScreen";
+import DeleteAccountScreen from "../Screens/DeleteAccountScreen";
+import ChangePasswordScreen from "../Screens/SettingScreen/ChangePassword/ChangePasswordScreen";
 
 const Stack = createStackNavigator();
 
@@ -42,6 +43,9 @@ export default function AuthNavigation() {
         <Stack.Screen name="SelectTransportScreen" component={SelectTransportScreen} />
         <Stack.Screen name="AvailableCarsScreen" component={AvailableCarsScreen} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
+        <Stack.Screen name="ContactUsScreen" component={ContactUsScreen} />
+        <Stack.Screen name="DeleteAccountScreen" component={DeleteAccountScreen} />
+        <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

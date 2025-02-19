@@ -1,27 +1,48 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { post } from '../../api'; // Adjust the import path as needed
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../redux/slices/userSlice';
+import { setTokens } from '@/src/redux/slices/tokenSlice';
+import Apple from "../../assets/images/svg/Apple.svg";
+import Facebook from "../../assets/images/svg/Facebook.svg";
+import Gmail from "../../assets/images/svg/Gmail.svg";
+import { scale } from 'react-native-size-matters';
 
-const LoginScreen = () => {
+const LoginScreen = ({navigation}: {navigation: any}) => {
     const [emailOrPhone, setEmailOrPhone] = useState('');
     const [password, setPassword] = useState('');
+    const dispatch = useDispatch();
 
     const handleLogin = async () => {
         try {
-            const response = await axios.post('192.168.31.111:8000/api/v1/users/login', {
-                email: emailOrPhone,
-                password: password,
+            const response = await post({
+                path: 'http://192.168.31.111:8000/api/v1/users/login',
+                data: {
+                    email: emailOrPhone,
+                    password: password,
+                },
+
             });
-            
-            // Store tokens in AsyncStorage
-            await AsyncStorage.setItem('accessToken', response.data.accessToken);
-            await AsyncStorage.setItem('refreshToken', response.data.refreshToken);
-            
-            // Navigate to the next screen (e.g., Home)
-            Alert.alert('Login Successful', `Welcome back!`);
-            console.log(response.data); // You can store the user data as needed
+
+            // Check if the response is successful
+            if (response) {
+                await AsyncStorage.setItem('accessToken', response.accessToken);
+                await AsyncStorage.setItem('refreshToken', response.refreshToken);
+
+                // Dispatch the setUser action with user data and tokens
+                dispatch(setUser({
+                    id: response.user.id,
+                    email: response.user.email,
+                    fullName: response.user.fullName,
+                }));
+
+                // Handle navigation after successful login
+                navigation.navigate('BottomNavigation');
+            }
         } catch (error) {
+            console.log(error); // Log the error for debugging
             Alert.alert('Login Failed', error.response?.data?.message || 'An error occurred');
         }
     };
@@ -53,17 +74,20 @@ const LoginScreen = () => {
             <Text style={styles.orText}>or</Text>
             <View style={styles.socialButtonsContainer}>
                 <TouchableOpacity style={styles.socialButton}>
-                    <Text style={styles.socialButtonText}>Sign up with Gmail</Text>
+                <Gmail />
+                    <Text style={styles.socialButtonText}>Login with Gmail</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.socialButton}>
-                    <Text style={styles.socialButtonText}>Sign up with Facebook</Text>
+                    <Facebook />
+                    <Text style={styles.socialButtonText}>Login with Facebook</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.socialButton}>
-                    <Text style={styles.socialButtonText}>Sign up with Apple</Text>
+                    <Apple />
+                    <Text style={styles.socialButtonText}>Login with Apple</Text>
                 </TouchableOpacity>
             </View>
             <Text style={styles.footerText}>
-                Don’t have an account? <Text style={styles.signUpText}>Sign Up</Text>
+                Don't have an account? <Text style={styles.signUpText}>Sign Up</Text>
             </Text>
         </View>
     );
@@ -72,7 +96,7 @@ const LoginScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 16,
+        padding: 24,
         backgroundColor: '#fff',
     },
     header: {
@@ -113,6 +137,8 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     socialButton: {
+        flexDirection: 'row',
+        justifyContent: 'center',
         backgroundColor: '#f0f0f0',
         padding: 15,
         borderRadius: 8,
@@ -120,6 +146,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     socialButtonText: {
+        marginStart: scale(10),
         color: '#333',
     },
     footerText: {

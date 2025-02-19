@@ -1,14 +1,24 @@
 // Frontened_App/src/App.tsx
-import React from 'react'; // Add this line
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import AuthNavigation from "./navigation/AuthNavigation";
+import React from 'react';
+import { Provider } from 'react-redux';
+import { PersistGate } from 'redux-persist/integration/react';
+import { store, persistor } from './redux/store';
+import Alert from './components/Alert/index';
+import Loading from './components/Loader/Loading';
+import AuthNavigation from './navigation/AuthNavigation';
+
+// Your app navigator or main component
 
 const App = () => {
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <AuthNavigation />
-    </GestureHandlerRootView>
+    <Provider store={store}>
+      <PersistGate loading={null} persistor={persistor}>
+        <AuthNavigation />
+        <Alert />
+        <Loading />
+      </PersistGate>
+    </Provider>
   );
-}
+};
 
 export default App;

@@ -3,9 +3,12 @@ import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from 'reac
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import ImagePickerComponent from '../../components/ImagePickerComponent';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../redux/store';
 
 const ProfileScreen = () => {
     const navigation = useNavigation();
+    const user = useSelector((state: RootState) => state.user);
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -24,13 +27,13 @@ const ProfileScreen = () => {
                     <ImagePickerComponent selectedImage={undefined} setSelectedImage={undefined} />
                 </View>
 
-                <Text style={styles.userName}>Nate Samson</Text>
+                <Text style={styles.userName}>{user.fullName}</Text>
             </View>
 
             <View style={styles.formContainer}>
                 <TextInput
                     style={styles.input}
-                    placeholder="nate@email.com"
+                    placeholder={user?.email}
                     editable={false}
                 />
 
@@ -47,6 +50,7 @@ const ProfileScreen = () => {
                         style={styles.phoneInput}
                         placeholder="Your mobile number"
                         editable={false}
+                        value={user?.phone}
                     />
                 </View>
 
