@@ -12,6 +12,7 @@ import {
     logout
 } from "../controllers/user.controller.js";
 import { authMiddleware } from "../middlewares/auth.middleware.js";
+import { upload } from "../middlewares/multer.middleware.js";
 
 const router = Router();
 
@@ -26,7 +27,11 @@ router.route("/reset-password").post(resetPassword);
 router.route("/logout").post(authMiddleware, logout);
 
 // Profile routes
-router.route("/complete-profile").post(authMiddleware, completeProfile);
-// router.post('/completeProfile', authMiddleware, upload.single('profileImage'), completeProfile);
+// router.route("/complete-profile").post(, completeProfile);
+router.route("/complete-profile")
+    .post(
+        upload.single("profileImage"),
+        completeProfile
+    );
 
 export default router;

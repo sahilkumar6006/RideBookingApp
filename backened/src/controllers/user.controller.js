@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken"
 import { generateOtp,verifyOtpCheck } from "../controllers/otp.controller.js";
 import bcrypt from "bcrypt";
 import { OTP } from "../models/otp.model.js"
+import mongoose from "mongoose";
 
 const generateAccessAndRefereshTokens = async(userId) =>{
     try {
@@ -129,30 +130,65 @@ const setPassword = async (req, res) => {
 
 
 const completeProfile = asyncHandler(async (req, res) => {
-    const { userId, address, age } = req.body;
-    const profileImage = req.file; // Assuming image upload is handled via middleware
+    try {
+        // Add validation for userId
+        const { userId } = req.body;
+        
+        if (!userId) {
+            throw new ApiError(400, "User ID is required");
+        }
 
-    if (!userId) {
-        throw new ApiError(400, "User ID is required");
+        console.log("Received userId:", userId); // Debug log
+
+        // Validate that userId is a valid ObjectId
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            throw new ApiError(400, "Invalid user ID format");
+        }
+
+        // Rest of your existing code...
+        const { address, age, street, district, city, state, zipCode } = req.body;
+        
+        let imageUrl;
+        if (req.file) {
+            const uploadResult = await uploadOnCloudinary(req.file.path);
+            if (!uploadResult) {
+                throw new ApiError(400, "Error while uploading profile image");
+            }
+            imageUrl = uploadResult.secure_url;
+        }
+
+        const updateFields = {
+            ...(imageUrl && { profileImage: imageUrl }),
+            ...(address && { address }),
+            ...(age && { age: Number(age) }),
+            ...(street && { street }),
+            ...(district && { district }),
+            ...(city && { city }),
+            ...(state && { state }),
+            ...(zipCode && { zipCode })
+        };
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { $set: updateFields },
+            { new: true, runValidators: true }
+        ).select("-password -refreshToken");
+
+        if (!updatedUser) {
+            throw new ApiError(404, "User not found");
+        }
+
+        return res.status(200).json(
+            new ApiResponse(200, updatedUser, "Profile completed successfully")
+        );
+
+    } catch (error) {
+        console.error("Complete profile error:", error);
+        throw new ApiError(
+            error.statusCode || 500,
+            error.message || "Error while completing profile"
+        );
     }
-
-    let imageUrl = "";
-    if (profileImage) {
-        const uploadResult = await uploadOnCloudinary(profileImage.path);
-        imageUrl = uploadResult.secure_url;
-    }
-
-    const user = await User.findByIdAndUpdate(
-        userId,
-        { profileImage: imageUrl, address, age },
-        { new: true }
-    );
-
-    if (!user) {
-        throw new ApiError(404, "User not found");
-    }
-
-    return res.status(200).json(new ApiResponse(200, user, "Profile completed successfully"));
 });
 
 
@@ -195,6 +231,15 @@ const completeProfile = asyncHandler(async (req, res) => {
                 fullName: user.fullName,
                 email: user.email,
                 userType: user.userType,
+                profileImage: user.profileImage,
+                address: user.address,
+                age: user.age,
+                street: user.street,
+                district: user.district,
+                city: user.city,
+                state: user.state,
+                zipCode: user.zipCode,
+                phone: user.phone
             }
         });
 
