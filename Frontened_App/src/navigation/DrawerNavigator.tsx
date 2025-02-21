@@ -4,6 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import BTabNavigation from "./BottomNavigator"; // Your Bottom Tab Navigator
 import CustomDrawer from "../components/CustomDrawer";
 
+
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
