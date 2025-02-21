@@ -16,6 +16,9 @@ import LoginScreen from "../Screens/Login";
 import ContactUsScreen from "../Screens/ContactUsScreen";
 import DeleteAccountScreen from "../Screens/DeleteAccountScreen";
 import ChangePasswordScreen from "../Screens/SettingScreen/ChangePassword/ChangePasswordScreen";
+import NotificationScreen from "../Screens/NotificationScreen";
+import AddMoney from "../Screens/AddMoney";
+import LocationScreen from "../Screens/LocationSelection";
 
 const Stack = createStackNavigator();
 
@@ -39,13 +42,15 @@ export default function AuthNavigation() {
         />
         <Stack.Screen name="BottomNavigation" component={DrawerNavigator} />
         <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
-        <Stack.Screen name="LocationSelection" component={LocationSelection} />
+        <Stack.Screen name="LocationScreen" component={LocationScreen} />
         <Stack.Screen name="SelectTransportScreen" component={SelectTransportScreen} />
         <Stack.Screen name="AvailableCarsScreen" component={AvailableCarsScreen} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="ContactUsScreen" component={ContactUsScreen} />
         <Stack.Screen name="DeleteAccountScreen" component={DeleteAccountScreen} />
         <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} />
+        <Stack.Screen name="AddMoney" component={AddMoney} />
+        <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

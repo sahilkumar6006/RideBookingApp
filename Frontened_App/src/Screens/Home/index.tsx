@@ -6,6 +6,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { Colors } from '@/src/constants/colors';
+import LocationScreen from '../LocationSelection';
+import LocationSelectionModal from '../LocationSelection';
 
 interface LocationType {
   latitude: number;
@@ -18,6 +20,7 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [searchText, setSearchText] = useState('');
   const [activeTab, setActiveTab] = useState('transport');
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     const requestLocationPermission = async () => {
@@ -74,7 +77,7 @@ const Home = () => {
         <TouchableOpacity style={styles.iconButton} onPress={() => navigation.openDrawer()}>
           <Ionicons name="menu" size={24} color={Colors.green[200]} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.iconButton}>
+        <TouchableOpacity style={styles.iconButton} onPress={() => navigation.navigate("NotificationScreen")}>
           <Ionicons name="notifications-outline" size={24} color={Colors.green[200]} />
         </TouchableOpacity>
       </View>
@@ -87,7 +90,7 @@ const Home = () => {
         </TouchableOpacity>
 
         {/* Location Button */}
-        <TouchableOpacity style={styles.locationButton} onPress={() => navigation.navigate('LocationSelection')}>
+        <TouchableOpacity style={styles.locationButton} onPress={() => setModalVisible(true)}>
           <Ionicons name="location" size={moderateScale(24)} color={Colors.green[200]} />
         </TouchableOpacity>
 
@@ -154,6 +157,8 @@ const Home = () => {
         </TouchableOpacity>
       </View>
     </View> */}
+
+<LocationSelectionModal visible={modalVisible} onClose={() => setModalVisible(false)} />
     </View>
   );
 };

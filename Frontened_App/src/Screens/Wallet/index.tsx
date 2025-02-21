@@ -19,7 +19,7 @@ const Wallet = () => {
 
       {/* Add Money Button */}
       <View style={styles.addMoneyContainer}>
-        <TouchableOpacity style={styles.addMoneyButton}>
+        <TouchableOpacity style={styles.addMoneyButton} onPress={() => navigation.navigate("AddMoney")}>
           <Text style={styles.addMoneyText}>Add Money</Text>
         </TouchableOpacity>
       </View>

@@ -28,27 +28,28 @@ const SignUpScreen = () => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const handleSignup = async () => {
+    navigation.navigate("Otp");
     // navigation.navigate("Otp"); // Commented out for now
     if (!fullName || !email || !phone || !gender) {
       Alert.alert('Error', 'Please fill in all fields.');
       return;
     }
   
-    try {
-      const response = await post({
-        path: 'http://localhost:8000/api/v1/users/register', // Adjust the path as necessary
-        data: {
-          fullName,
-          email,
-          phone,
-          gender,
-        },
-      });
-      console.log('Success:', response);
-      navigation.navigate("Otp"); // Navigate after successful signup
-    } catch (error) {
-      console.error('Error:', error.response ? error.response.data : error.message);
-    }
+    // try {
+    //   const response = await post({
+    //     path: 'http://localhost:8000/api/v1/users/register', // Adjust the path as necessary
+    //     data: {
+    //       fullName,
+    //       email,
+    //       phone,
+    //       gender,
+    //     },
+    //   });
+    //   console.log('Success:', response);
+    //   navigation.navigate("Otp"); // Navigate after successful signup
+    // } catch (error) {
+    //   console.error('Error:', error.response ? error.response.data : error.message);
+    // }
   };
   return (
     <ScreenWrapper children={undefined} onBackPress={undefined} containerStyle={undefined} headerRight={undefined}>

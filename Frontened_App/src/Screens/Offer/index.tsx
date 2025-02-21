@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, SafeAreaView, ScrollView, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; // Assuming using Expo
+import { useNavigation } from '@react-navigation/native';
 
 const OfferCard = ({ discount, description }) => (
   <View style={styles.offerCard}>
@@ -15,6 +16,7 @@ const OfferCard = ({ discount, description }) => (
 );
 
 const Offer = () => {
+  const navigation = useNavigation();
   const offers = [
     { discount: '15%', description: 'Black Friday' },
     { discount: '5%', description: 'Crismus' },
@@ -29,7 +31,7 @@ const Offer = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.menuButton}>
+        <TouchableOpacity style={styles.menuButton} onPress={() => navigation.openDrawer()}>
           <Ionicons name="menu" size={24} color="#40B37C" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Offer</Text>
