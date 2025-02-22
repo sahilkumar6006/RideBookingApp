@@ -1,14 +1,87 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput, Alert, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import ImagePickerComponent from '../../components/ImagePickerComponent';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../redux/store';
+import axios from 'axios';
+import { clearUser } from '@/src/redux/slices/userSlice';
 
 const ProfileScreen = () => {
     const navigation = useNavigation();
     const user = useSelector((state: RootState) => state.user);
+    const dispatch = useDispatch();
+    const [isEditing, setIsEditing] = useState(false);
+    console.log(user);
+    const [selectedImage, setSelectedImage] = useState(null);
+    
+    // Form state
+    const [formData, setFormData] = useState({
+        address: user?.address || '',
+        age: user?.age || '',
+        street: user?.street || '',
+        district: user?.district || '',
+        city: user?.city || '',
+        state: user?.state || '',
+        zipCode: user?.zipCode || '',
+    });
+
+    const handleUpdateProfile = async () => {
+        try {
+            const data = new FormData();
+            
+            // Make sure to use the correct user id field
+            data.append('userId', user.id);
+
+            // Log the userId to verify it's being sent
+            console.log('Sending userId:', user.id);
+
+            // Append image if selected
+            if (selectedImage) {
+                const imageFile = {
+                    uri: selectedImage,
+                    type: 'image/jpeg',
+                    name: 'profile-image.jpg',
+                };
+                data.append('profileImage', imageFile);
+            }
+
+            // Only append fields that have values
+            Object.keys(formData).forEach((key) => {
+                if (formData[key] && formData[key].toString().trim() !== '') {
+                    data.append(key, formData[key]);
+                }
+            });
+
+            // Log the full FormData for debugging
+            console.log('FormData contents:', Object.fromEntries(data));
+
+            const response = await axios.post(
+                'http://your-api-url/api/v1/users/complete-profile', 
+                data,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                }
+            );
+
+            if (response.data) {
+                // Update the local state with the new data
+                dispatch(updateProfile(response.data.data));
+                Alert.alert('Success', 'Profile updated successfully');
+                setIsEditing(false);
+            }
+        } catch (error) {
+            console.error('Profile update error:', error);
+            Alert.alert(
+                'Error', 
+                error.response?.data?.message || 'Failed to update profile'
+            );
+        }
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -16,61 +89,132 @@ const ProfileScreen = () => {
                     <Ionicons name="menu" size={24} color="#4CAF50" />
                 </TouchableOpacity>
                 <Text style={styles.title}>Profile</Text>
+                <TouchableOpacity 
+                    style={styles.editButton} 
+                    onPress={() => setIsEditing(!isEditing)}
+                >
+                    <Text style={styles.editButtonText}>
+                        {isEditing ? 'Cancel' : 'Edit'}
+                    </Text>
+                </TouchableOpacity>
             </View>
 
-            <View style={styles.profileSection}>
-                <View style={styles.avatarContainer}>
-                    {/* <Image
-                        source={require('../../assets/avatar.png')}
-                        style={styles.avatar}
-                    /> */}
-                    <ImagePickerComponent selectedImage={undefined} setSelectedImage={undefined} />
+            <ScrollView 
+                style={styles.scrollView}
+                showsVerticalScrollIndicator={false}
+            >
+                <View style={styles.profileSection}>
+                    <View style={styles.avatarContainer}>
+                        <ImagePickerComponent 
+                            selectedImage={selectedImage} 
+                            setSelectedImage={setSelectedImage}
+                            currentImage={user.profileImage}
+                            disabled={!isEditing}
+                        />
+                    </View>
+
+                    <Text style={styles.userName}>{user.fullName}</Text>
                 </View>
 
-                <Text style={styles.userName}>{user.fullName}</Text>
-            </View>
-
-            <View style={styles.formContainer}>
-                <TextInput
-                    style={styles.input}
-                    placeholder={user?.email}
-                    editable={false}
-                />
-
-                <View style={styles.phoneInputContainer}>
-                    <View style={styles.countryCode}>
-                        {/* <Image
-                            source={require('../../assets/bangladesh-flag.png')}
-                            style={styles.flagIcon}
-                        /> */}
-                        <Text>+880</Text>
-                        <Ionicons name="chevron-down" size={20} color="#666" />
-                    </View>
+                <View style={styles.formContainer}>
                     <TextInput
-                        style={styles.phoneInput}
-                        placeholder="Your mobile number"
+                        style={styles.input}
+                        value={user?.email}
                         editable={false}
-                        value={user?.phone}
+                    />
+
+                    <View style={styles.phoneInputContainer}>
+                        <View style={styles.countryCode}>
+                            <Text>+880</Text>
+                            <Ionicons name="chevron-down" size={20} color="#666" />
+                        </View>
+                        <TextInput
+                            style={styles.phoneInput}
+                            value={user?.phone}
+                            editable={false}
+                        />
+                    </View>
+
+                    {/* Editable fields */}
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Address"
+                        value={formData.address}
+                        onChangeText={(text) => setFormData({...formData, address: text})}
+                        editable={isEditing}
+                    />
+
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Age"
+                        value={formData.age}
+                        onChangeText={(text) => setFormData({...formData, age: text})}
+                        editable={isEditing}
+                        keyboardType="numeric"
+                    />
+
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Street"
+                        value={formData.street}
+                        onChangeText={(text) => setFormData({...formData, street: text})}
+                        editable={isEditing}
+                    />
+
+                    <TextInput
+                        style={styles.input}
+                        placeholder="District"
+                        value={formData.district}
+                        onChangeText={(text) => setFormData({...formData, district: text})}
+                        editable={isEditing}
+                    />
+
+                    <TextInput
+                        style={styles.input}
+                        placeholder="City"
+                        value={formData.city}
+                        onChangeText={(text) => setFormData({...formData, city: text})}
+                        editable={isEditing}
+                    />
+
+                    <TextInput
+                        style={styles.input}
+                        placeholder="State"
+                        value={formData.state}
+                        onChangeText={(text) => setFormData({...formData, state: text})}
+                        editable={isEditing}
+                    />
+
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Zip Code"
+                        value={formData.zipCode}
+                        onChangeText={(text) => setFormData({...formData, zipCode: text})}
+                        editable={isEditing}
                     />
                 </View>
 
-                <TouchableOpacity style={styles.dropdownInput}>
-                    <Text style={styles.dropdownText}>Male</Text>
-                    <Ionicons name="chevron-down" size={20} color="#666" />
-                </TouchableOpacity>
+                <View style={styles.buttonContainer}>
+                    {isEditing ? (
+                        <TouchableOpacity 
+                            style={[styles.logoutButton, { backgroundColor: '#4CAF50' }]}
+                            onPress={handleUpdateProfile}
+                        >
+                            <Text style={styles.logoutText}>Save Changes</Text>
+                        </TouchableOpacity>
+                    ) : (
+                        <TouchableOpacity style={styles.logoutButton} onPress={() => {
+                            navigation.navigate('LoginScreen');
+                            dispatch(clearUser());
 
-                <TextInput
-                    style={styles.input}
-                    placeholder="Address"
-                    editable={false}
-                />
+                        }}>
+                            <Text style={styles.logoutText}>Logout</Text>
+                        </TouchableOpacity>
+                    )}
+                </View>
 
-                <TouchableOpacity style={styles.logoutButton}>
-                    <Text style={styles.logoutText}>Logout</Text>
-                </TouchableOpacity>
-            </View>
-
-
+                <View style={styles.bottomPadding} />
+            </ScrollView>
         </View>
     );
 };
@@ -80,12 +224,16 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#fff',
     },
+    scrollView: {
+        flex: 1,
+    },
     header: {
         flexDirection: 'row',
         alignItems: 'center',
         padding: 16,
         paddingTop: 60,
         backgroundColor: '#fff',
+        zIndex: 1,
     },
     menuButton: {
         padding: 8,
@@ -109,7 +257,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#E0E0E0',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        overflow: 'hidden',
     },
     avatar: {
         width: 100,
@@ -131,7 +280,6 @@ const styles = StyleSheet.create({
     },
     formContainer: {
         padding: 16,
-        marginTop: 20,
     },
     input: {
         borderWidth: 1,
@@ -217,6 +365,23 @@ const styles = StyleSheet.create({
     },
     activeNavText: {
         color: '#4CAF50',
+    },
+    editButton: {
+        position: 'absolute',
+        right: 16,
+        padding: 8,
+    },
+    editButtonText: {
+        color: '#4CAF50',
+        fontSize: 16,
+        fontWeight: '600',
+    },
+    buttonContainer: {
+        padding: 16,
+        paddingBottom: 0,
+    },
+    bottomPadding: {
+        height: 30,
     },
 });
 

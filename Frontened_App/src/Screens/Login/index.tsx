@@ -36,6 +36,14 @@ const LoginScreen = ({navigation}: {navigation: any}) => {
                     id: response.user.id,
                     email: response.user.email,
                     fullName: response.user.fullName,
+                    profileImage: response.user.profileImage || '',
+                    address: response.user.address || '',
+                    street: response.user.street || '',
+                    district: response.user.district || '',
+                    city: response.user.city || '',
+                    state: response.user.state || '',
+                    zipCode: response.user.zipCode || '',
+                    phone: response.user.phone || ''
                 }));
 
                 // Handle navigation after successful login

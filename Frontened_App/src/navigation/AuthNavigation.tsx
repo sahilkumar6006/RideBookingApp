@@ -9,7 +9,6 @@ import SetPasswordScreen from "../Screens/setPasswordScreen";
 import CompleteProfileScreen from "../Screens/CompleteProfileScreen";
 import DrawerNavigator from "./DrawerNavigator";
 import SettingsScreen from "../Screens/SettingScreen/SettingScreen";
-import LocationSelection from "../Screens/LocationSelection";
 import SelectTransportScreen from "../Screens/SelectTransportScreen";
 import AvailableCarsScreen from "../Screens/AvailableTransport";
 import LoginScreen from "../Screens/Login";
@@ -19,6 +18,8 @@ import ChangePasswordScreen from "../Screens/SettingScreen/ChangePassword/Change
 import NotificationScreen from "../Screens/NotificationScreen";
 import AddMoney from "../Screens/AddMoney";
 import LocationScreen from "../Screens/LocationSelection";
+import AddAmountScreen from "../Screens/AddMoney";
+import ComplainScreen from "../Screens/ComplainScreen";
 
 const Stack = createStackNavigator();
 
@@ -51,6 +52,8 @@ export default function AuthNavigation() {
         <Stack.Screen name="ChangePasswordScreen" component={ChangePasswordScreen} />
         <Stack.Screen name="AddMoney" component={AddMoney} />
         <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
+        <Stack.Screen name="AddAmountScreen" component={AddAmountScreen} />
+        <Stack.Screen name="ComplainScreen" component={ComplainScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

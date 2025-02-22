@@ -5,9 +5,9 @@ import * as ImageManipulator from 'expo-image-manipulator';
 import Colors from '../../Themes/Colors';
 import images from '../../Themes/Images';
 import { Text } from 'react-native';
-import Profie from "../../assets/images/svg/Profile.svg";
+import Profile from "../../assets/images/svg/Profile.svg";
 
-const ImagePickerComponent = ({ selectedImage, setSelectedImage }) => {
+const ImagePickerComponent = ({ selectedImage, setSelectedImage, currentImage, disabled }) => {
     const [hasCameraPermission, setHasCameraPermission] = useState(null);
     const [hasMediaLibraryPermission, setHasMediaLibraryPermission] = useState(null);
 
@@ -21,6 +21,8 @@ const ImagePickerComponent = ({ selectedImage, setSelectedImage }) => {
     }, []);
 
     const pickImage = async () => {
+        if (disabled) return;
+        
         if (hasCameraPermission === null || hasMediaLibraryPermission === null) {
             Alert.alert('Permissions not determined');
             return;
@@ -92,8 +94,10 @@ const ImagePickerComponent = ({ selectedImage, setSelectedImage }) => {
         <TouchableOpacity style={styles.editIcon} onPress={pickImage}>
             {selectedImage ? (
                 <Image source={{ uri: selectedImage }} style={styles.profileImage} />
+            ) : currentImage ? (
+                <Image source={{ uri: currentImage }} style={styles.profileImage} />
             ) : (
-                <Profie style={styles.profileImage} />
+                <Profile width={100} height={100} style={styles.profileImage} />
             )}
             {/* <EDITicon style={styles.editIconOverlay} /> */}
         </TouchableOpacity>
@@ -104,13 +108,15 @@ const styles = StyleSheet.create({
     editIcon: {
         position: 'relative',
         alignSelf: 'center',
-    },
-    profileImage: {
         width: 100,
         height: 100,
         borderRadius: 50,
-        alignSelf: 'center',
-        marginVertical: 10,
+        overflow: 'hidden', // This ensures the image stays within bounds
+    },
+    profileImage: {
+        width: '100%',
+        height: '100%',
+        borderRadius: 50,
     },
     profileIcon: {
         borderRadius: 35,
@@ -129,4 +135,5 @@ const styles = StyleSheet.create({
     },
 });
 
+export default ImagePickerComponent;
 export default ImagePickerComponent;

@@ -16,7 +16,14 @@ const CustomDrawer = (props) => {
             <DrawerContentScrollView {...props}>
                 {/* Profile Section */}
                 <View style={{ padding: 20, alignItems: "center" }}>
-                    <Profie style={{ width: 80, height: 80, borderRadius: 40 }} />
+                {
+                    user?.profileImage ? (
+                        <Image source={{ uri: user?.profileImage }} style={{ width: 80, height: 80, borderRadius: 40 }} />
+                    ) : (
+                        <Profie style={{ width: 80, height: 80, borderRadius: 40 }} />
+                    )
+                }
+                    
                     {/* <Image
                         source={{ uri: "https://media2.dev.to/dynamic/image/width=800%2Cheight=%2Cfit=scale-down%2Cgravity=auto%2Cformat=auto/https%3A%2F%2Fwww.gravatar.com%2Favatar%2F2c7d99fe281ecd3bcd65ab915bac6dd5%3Fs%3D250" }} // Replace with actual image
                         style={{ width: 80, height: 80, borderRadius: 40 }}
@@ -31,14 +38,14 @@ const CustomDrawer = (props) => {
                 <View style={{ paddingLeft: 20 }}>
                     {[
                         { label: "History", icon: "file-text" },
-                        { label: "Complain", icon: "alert-circle" },
+                        { label: "Complain", icon: "alert-circle", onPress: () => props.navigation.navigate('ComplainScreen') },
                         { label: "Referral", icon: "users" },
                         { label: "About Us", icon: "info" },
-                        { label: "SettingsScreen", icon: "settings" },
+                        { label: "SettingsScreen", icon: "settings" , navigation: props.navigation} ,
                         { label: "Help and Support", icon: "help-circle" },
                     ].map((item, index) => (
                         <TouchableOpacity key={index} style={{ flexDirection: "row", alignItems: "center", paddingVertical: 10 }}
-                            onPress={() => props.navigation.navigate(item.label)}
+                            onPress={() => item.onPress ? item.onPress() : props.navigation.navigate(item.label)}
                         >
                             <Icon name={item.icon} size={20} color="black" style={{ marginRight: 10 }} />
                             <Text style={{ fontSize: 16 }}>{item.label}</Text>
