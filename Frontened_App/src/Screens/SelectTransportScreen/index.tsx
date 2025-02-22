@@ -7,22 +7,23 @@ import CycleIcon from '../../assets/images/svg/Cycle.svg';
 import WalletIcon from '../../assets/images/svg/Taxi.svg'; // Ensure the name matches the file
 import ScreenWrapper from '@/src/components/ScreenWrapper';
 import { scale } from 'react-native-size-matters';
+import { useNavigation } from '@react-navigation/native';
 
-const transportOptions = [
-    { id: '1', name: 'Car' , icon: CarIcon}, // Add your icon images
-    { id: '2', name: 'Bike' , icon: BikeIcon},
-    { id: '3', name: 'Cycle' , icon: CycleIcon},
-    { id: '4', name: 'Taxi' , icon: WalletIcon},
-];
-
-const SelectTransportScreen = ({ navigation }: { navigation: any }) => {
+const SelectTransportScreen = () => {
+    const navigation = useNavigation(); 
+    const transportOptions = [
+        { id: '1', name: 'Car', icon: CarIcon, onPress: () => navigation.navigate('AvailableCarsScreen')},
+        { id: '2', name: 'Bike', icon: BikeIcon, onPress: () => navigation.navigate('AvailableBikesScreen')},
+        { id: '3', name: 'Cycle', icon: CycleIcon, onPress: () => navigation.navigate('AvailableCyclesScreen')},
+        { id: '4', name: 'Taxi', icon: WalletIcon, onPress: () => navigation.navigate('AvailableTaxisScreen')},
+    ];
     return (
         <ScreenWrapper children={undefined} onBackPress={undefined} containerStyle={undefined} headerRight={undefined}>
         <View style={styles.container}>
             <Text style={styles.header}>Select your transport</Text>
             <View style={styles.optionsContainer}>
                 {transportOptions.map((option) => (
-                    <TouchableOpacity key={option.id} style={styles.option} onPress={() => navigation.navigate('AvailableCarsScreen')}>
+                    <TouchableOpacity key={option.id} style={styles.option} onPress={option.onPress}>
                         <option.icon width={scale(60)} height={scale(70)} />
                         <Text style={styles.optionText}>{option.name}</Text>
                     </TouchableOpacity>
