@@ -85,7 +85,7 @@ const Home = () => {
       {/* Main Content Container */}
       <View style={styles.contentContainer}>
         {/* Rental Button */}
-        <TouchableOpacity style={styles.rentalButton}  onPress={() => navigation.navigate("SelectTransportScreen")}>
+        <TouchableOpacity style={styles.rentalButton}  onPress={() => navigation.navigate("SelectTransport")}>
           <Text style={styles.rentalButtonText}>Rental</Text>
         </TouchableOpacity>
 

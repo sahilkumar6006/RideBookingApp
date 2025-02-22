@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '../Screens/Home';
 import Wallet from '../Screens/Wallet';
 import Offer from '../Screens/Offer';
-  import HomeIcon from '../assets/images/svg/Home.svg';
+import HomeIcon from '../assets/images/svg/Home.svg';
 import Heart from '../assets/images/svg/Heart.svg';
 import Vector from '../assets/images/svg/Vector.svg';
 import WalletIcon from '../assets/images/svg/wallet.svg';

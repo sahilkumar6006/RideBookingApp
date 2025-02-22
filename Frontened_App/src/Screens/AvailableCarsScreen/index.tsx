@@ -1,23 +1,31 @@
-// Frontened_App/src/Screens/AvailableCars/index.tsx
-import CarCard from '@/src/components/CarCard';
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
-const AvailableCarsScreen = () => {
-  const cars = [
-    { name: 'BMW Cabrio', details: 'Automatic | 3 seats | Octane', image: 'url_to_image' },
-    { name: 'Mustang Shelby GT', details: 'Automatic | 3 seats | Octane', image: 'url_to_image' },
-    { name: 'BMW 18', details: 'Automatic | 3 seats | Octane', image: 'url_to_image' },
-    { name: 'Jaguar Silber', details: 'Automatic | 3 seats | Octane', image: 'url_to_image' },
-  ];
+import CarCard from '@/src/components/CarCard';
+
+type VehicleScreenProps = {
+  route: {
+    params: {
+      vehicles: any[];
+      vehicleType: 'Car' | 'Bike' | 'Cycle' | 'Taxi';
+    }
+  }
+};
+
+const AvailableVehiclesScreen: React.FC<VehicleScreenProps> = ({ route }) => {
+  const { vehicles = [], vehicleType = 'Car' } = route.params;
 
   return (
     <View style={styles.container}>
-      <Text style={styles.headerText}>Available cars for ride</Text>
-      <Text style={styles.carsFoundText}>{cars.length} cars found</Text>
+      <Text style={styles.headerText}>Available {vehicleType}s for ride</Text>
+      <Text style={styles.vehiclesFoundText}>{vehicles.length} {vehicleType.toLowerCase()}s found</Text>
       <ScrollView>
-        {cars.map((car, index) => (
-          <CarCard key={index} car={car} />
+        {vehicles.map((vehicle, index) => (
+          <CarCard 
+            key={index} 
+            car={vehicle}
+            vehicleType={vehicleType}
+          />
         ))}
       </ScrollView>
     </View>
@@ -35,10 +43,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: scale(10),
   },
-  carsFoundText: {
+  vehiclesFoundText: {
     fontSize: scale(16),
     marginBottom: scale(20),
   },
 });
 
-export default AvailableCarsScreen;
+export default AvailableVehiclesScreen;

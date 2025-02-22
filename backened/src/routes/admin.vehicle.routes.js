@@ -1,7 +1,5 @@
 import { Router } from "express";
 import { upload } from "../middlewares/multer.middleware.js";
-import { authMiddleware } from "../middlewares/auth.middleware.js";
-import { isAdmin } from "../middlewares/admin.middleware.js";
 import {
     addVehicle,
     updateVehicle,
@@ -12,16 +10,21 @@ import {
 
 const router = Router();
 
-// Secure all routes with authentication and admin check
-router.use(authMiddleware, isAdmin);
+// No authentication middleware applied
 
 router.route("/")
-    .post(upload.array("documents", 5), addVehicle)
+    .post(upload.fields([
+        { name: "image", maxCount: 1 },
+        { name: "documents", maxCount: 5 }
+    ]), addVehicle)
     .get(getAllVehicles);
 
 router.route("/:vehicleId")
     .get(getVehicleById)
-    .patch(upload.array("documents", 5), updateVehicle)
+    .patch(upload.fields([
+        { name: "image", maxCount: 1 },
+        { name: "documents", maxCount: 5 }
+    ]), updateVehicle)
     .delete(deleteVehicle);
 
 export default router; 

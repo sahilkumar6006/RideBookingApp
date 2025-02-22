@@ -23,9 +23,9 @@ const generateAccessAndRefereshTokens = async(userId) =>{
 }
 const registerUser = asyncHandler(async (req, res) => {
     try {
-        const { fullName, email, phone, gender } = req.body;
+        const { fullName, email, phone, gender, userType } = req.body;
 
-        if ([fullName, email, phone, gender].some((field) => field?.trim() === "")) {
+        if ([fullName, email, phone, gender, userType].some((field) => field?.trim() === "")) {
             throw new ApiError(400, "All fields are required");
         }
 
@@ -45,7 +45,7 @@ const registerUser = asyncHandler(async (req, res) => {
                 return res.status(200).json(new ApiResponse(200, { otp }, "OTP resent successfully"));
             }
         }
-       const user = await User.create({ fullName, email, phone, gender });
+        const user = await User.create({ fullName, email, phone, gender, userType });
         const otp = await generateOtp(phone);
         return res.status(201).json(new ApiResponse(201, { user, otp }, "User registered successfully"));
     } catch (error) {

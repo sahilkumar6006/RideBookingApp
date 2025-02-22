@@ -11,7 +11,7 @@ import {addParams, clearParams} from '../redux/slices/paramsSlice';
 import { getStoredTokens } from '../methods/tokens';
 import { showAlert } from '../redux/slices/alertSlice';
 
-export const BASE_URL = 'http://localhost:8000';
+export const BASE_URL = 'http://192.168.31.111:8000';
 
 
 const axiosInstance = axios.create({

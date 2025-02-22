@@ -2,6 +2,7 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { Vehicle } from "../models/vehicle.model.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const addVehicle = asyncHandler(async (req, res) => {
     const {
@@ -9,7 +10,28 @@ const addVehicle = asyncHandler(async (req, res) => {
         vehicleType,
         model,
         licensePlate,
+        specifications,
+        features,
     } = req.body;
+
+    // Parse specifications and features from form data
+    let parsedSpecifications;
+    let parsedFeatures;
+
+    try {
+        // Parse specifications if it's a string
+        parsedSpecifications = typeof specifications === 'string' 
+            ? JSON.parse(specifications) 
+            : specifications;
+
+        // Parse features if it's a string
+        parsedFeatures = typeof features === 'string' 
+            ? JSON.parse(features) 
+            : features;
+
+    } catch (error) {
+        throw new ApiError(400, "Invalid specifications or features format");
+    }
 
     if (!driver || !vehicleType || !model || !licensePlate) {
         throw new ApiError(400, "All fields are required");
@@ -21,28 +43,68 @@ const addVehicle = asyncHandler(async (req, res) => {
         throw new ApiError(409, "Vehicle with this license plate already exists");
     }
 
+    // Upload image if provided
+    let imageUrl = '';
+    if (req.files && req.files.image) {
+        const result = await uploadOnCloudinary(req.files.image[0].path);
+        imageUrl = result.secure_url;
+    }
+
     // Upload documents if provided
     let documents = [];
-    if (req.files && req.files.length > 0) {
+    if (req.files && req.files.documents && req.files.documents.length > 0) {
         documents = await Promise.all(
-            req.files.map(async (file) => {
+            req.files.documents.map(async (file) => {
                 const result = await uploadOnCloudinary(file.path);
                 return result.secure_url;
             })
         );
     }
 
+    // Log the data being sent to the database
+    console.log("Adding vehicle with specifications:", parsedSpecifications);
+    console.log("Adding vehicle with features:", parsedFeatures);
+
     const vehicle = await Vehicle.create({
         driver,
         vehicleType,
         model,
         licensePlate,
+        image: imageUrl,
         documents,
-        isVerified: true // Admin-added vehicles are automatically verified
+        specifications: parsedSpecifications,
+        features: parsedFeatures,
+        isVerified: true,
     });
 
+    // Format the response
+    const formattedVehicle = {
+        _id: vehicle._id,
+        driver: vehicle.driver,
+        vehicleType: vehicle.vehicleType,
+        model: vehicle.model,
+        licensePlate: vehicle.licensePlate,
+        image: vehicle.image,
+        specifications: {
+            maxPower: vehicle.specifications?.maxPower || "N/A",
+            fuel: vehicle.specifications?.fuel || "N/A",
+            maxSpeed: vehicle.specifications?.maxSpeed || "N/A",
+            zeroToSixty: vehicle.specifications?.zeroToSixty || "N/A"
+        },
+        features: {
+            model: vehicle.features?.model || "N/A",
+            capacity: vehicle.features?.capacity || "N/A",
+            color: vehicle.features?.color || "N/A",
+            fuelType: vehicle.features?.fuelType || "N/A",
+            gearType: vehicle.features?.gearType || "N/A"
+        },
+        isVerified: vehicle.isVerified,
+        createdAt: vehicle.createdAt,
+        updatedAt: vehicle.updatedAt
+    };
+
     return res.status(201).json(
-        new ApiResponse(201, vehicle, "Vehicle added successfully")
+        new ApiResponse(201, formattedVehicle, "Vehicle added successfully")
     );
 });
 
@@ -65,6 +127,12 @@ const updateVehicle = asyncHandler(async (req, res) => {
     if (model) vehicle.model = model;
     if (licensePlate) vehicle.licensePlate = licensePlate;
     if (typeof isVerified === 'boolean') vehicle.isVerified = isVerified;
+
+    // Handle new image if provided
+    if (req.file) {
+        const result = await uploadOnCloudinary(req.file.path);
+        vehicle.image = result.secure_url;
+    }
 
     // Handle new documents if provided
     if (req.files && req.files.length > 0) {

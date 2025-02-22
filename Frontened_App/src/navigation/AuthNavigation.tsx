@@ -10,16 +10,16 @@ import CompleteProfileScreen from "../Screens/CompleteProfileScreen";
 import DrawerNavigator from "./DrawerNavigator";
 import SettingsScreen from "../Screens/SettingScreen/SettingScreen";
 import SelectTransportScreen from "../Screens/SelectTransportScreen";
-import AvailableCarsScreen from "../Screens/AvailableTransport";
 import LoginScreen from "../Screens/Login";
 import ContactUsScreen from "../Screens/ContactUsScreen";
 import DeleteAccountScreen from "../Screens/DeleteAccountScreen";
 import ChangePasswordScreen from "../Screens/SettingScreen/ChangePassword/ChangePasswordScreen";
 import NotificationScreen from "../Screens/NotificationScreen";
 import AddMoney from "../Screens/AddMoney";
-import LocationScreen from "../Screens/LocationSelection";
 import AddAmountScreen from "../Screens/AddMoney";
 import ComplainScreen from "../Screens/ComplainScreen";
+import AvailableVehiclesScreen from "../Screens/AvailableCarsScreen";
+import CarDetailsScreen from "../Screens/CarDetailScreen";
 
 const Stack = createStackNavigator();
 
@@ -43,9 +43,6 @@ export default function AuthNavigation() {
         />
         <Stack.Screen name="BottomNavigation" component={DrawerNavigator} />
         <Stack.Screen name="SettingsScreen" component={SettingsScreen} />
-        <Stack.Screen name="LocationScreen" component={LocationScreen} />
-        <Stack.Screen name="SelectTransportScreen" component={SelectTransportScreen} />
-        <Stack.Screen name="AvailableCarsScreen" component={AvailableCarsScreen} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="ContactUsScreen" component={ContactUsScreen} />
         <Stack.Screen name="DeleteAccountScreen" component={DeleteAccountScreen} />
@@ -54,6 +51,15 @@ export default function AuthNavigation() {
         <Stack.Screen name="NotificationScreen" component={NotificationScreen} />
         <Stack.Screen name="AddAmountScreen" component={AddAmountScreen} />
         <Stack.Screen name="ComplainScreen" component={ComplainScreen} />
+        <Stack.Screen 
+        name="SelectTransport" 
+        component={SelectTransportScreen} 
+      />
+      <Stack.Screen 
+        name="AvailableVehiclesScreen" 
+        component={AvailableVehiclesScreen} 
+      />
+       <Stack.Screen name="CarDetails" component={CarDetailsScreen} options={{ title: 'Car Details' }} />
       </Stack.Navigator>
     </NavigationContainer>
   );

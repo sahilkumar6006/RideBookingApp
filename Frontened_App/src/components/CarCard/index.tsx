@@ -2,14 +2,19 @@
 import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { scale } from 'react-native-size-matters';
-
+import { useNavigation } from '@react-navigation/native';
 const CarCard = ({ car }: { car: any }) => {
+  const navigation = useNavigation();
+  console.log(car);
   return (
     <View style={styles.card}>
       <Text style={styles.carName}>{car.name}</Text>
-      <Image source={{ uri: car.image }} style={styles.carImage} />
-      <Text style={styles.carDetails}>{car.details}</Text>
-      <TouchableOpacity style={styles.viewButton}>
+      <Image source={{ uri: car?.image }} style={styles.carImage} />
+      <Text style={styles.carDetails}>{car?.model}</Text>
+      <Text>Verified: {car.isVerified ? 'Yes' : 'No'}</Text>
+      <TouchableOpacity style={styles.viewButton} onPress={() => {
+        navigation.navigate('CarDetails', { car, carDetails: car }); 
+      }}>
         <Text style={styles.viewButtonText}>View car list</Text>
       </TouchableOpacity>
     </View>
@@ -34,7 +39,8 @@ const styles = StyleSheet.create({
   },
   carImage: {
     width: '100%',
-    height: scale(100),
+    resizeMode: 'cover',
+    height: scale(150),
     borderRadius: scale(8),
     marginVertical: scale(10),
   },
