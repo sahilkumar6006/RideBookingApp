@@ -43,8 +43,8 @@ const userSchema = new mongoose.Schema({
     },
     userType: {
         type: String,
-        enum: ["RIDER", "DRIVER"],
-        required: false, // Can be set later
+        enum: ["RIDER", "DRIVER", "ADMIN"],
+        required: false,
     },
     isVerified: {
         type: Boolean,
