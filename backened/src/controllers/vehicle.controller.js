@@ -198,10 +198,50 @@ const addVehicle = asyncHandler(async (req, res) => {
     });
 });
 
+const getVehicleById = asyncHandler(async (req, res) => {
+    const { _id } = req.params;
+    console.log(_id);
+
+    const vehicle = await Vehicle.findById(_id);
+    console.log(vehicle);
+    
+    if (!vehicle) {
+        throw new ApiError(404, "Vehicle not found");
+    }
+
+    const formattedVehicle = {  
+        _id: vehicle._id,
+        model: vehicle.model,
+        licensePlate: vehicle.licensePlate,
+        image: vehicle.image,
+        driver: vehicle.driver,
+        specifications: {
+            maxPower: vehicle.specifications?.maxPower || "N/A",
+            fuel: vehicle.specifications?.fuel || "N/A",
+            maxSpeed: vehicle.specifications?.maxSpeed || "N/A",
+            zeroToSixty: vehicle.specifications?.zeroToSixty || "N/A"
+        },  
+        features: { 
+            model: vehicle.features?.model || "N/A",
+            capacity: vehicle.features?.capacity || "N/A",
+            color: vehicle.features?.color || "N/A",
+            fuelType: vehicle.features?.fuelType || "N/A",
+            gearType: vehicle.features?.gearType || "N/A"
+        },
+        isVerified: vehicle.isVerified  
+
+    }
+
+    return res.status(200).json(
+        new ApiResponse(200, formattedVehicle, "Vehicle fetched successfully")
+    );
+});
+
 export {
     getAvailableCars,
     getAvailableBikes,
     getAvailableCycles,
     getAvailableTaxis,
     addVehicle,
+    getVehicleById
 }; 

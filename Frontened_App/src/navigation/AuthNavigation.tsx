@@ -20,6 +20,8 @@ import AddAmountScreen from "../Screens/AddMoney";
 import ComplainScreen from "../Screens/ComplainScreen";
 import AvailableVehiclesScreen from "../Screens/AvailableCarsScreen";
 import CarDetailsScreen from "../Screens/CarDetailScreen";
+import VechicleDetailScreen from "../Screens/CarDetailScreen";
+import DEtailScreenVehicles from "../Screens/VehicleDetailsScreen";
 
 const Stack = createStackNavigator();
 
@@ -60,6 +62,8 @@ export default function AuthNavigation() {
         component={AvailableVehiclesScreen} 
       />
        <Stack.Screen name="CarDetails" component={CarDetailsScreen} options={{ title: 'Car Details' }} />
+       <Stack.Screen name="VehicleDetailsScreen" component={VechicleDetailScreen} />
+       <Stack.Screen name="DEtailScreenVehicles" component={DEtailScreenVehicles} />
       </Stack.Navigator>
     </NavigationContainer>
   );
