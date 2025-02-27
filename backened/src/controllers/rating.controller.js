@@ -8,7 +8,7 @@ const createRating = asyncHandler(async (req, res) => {
     const { ride, ratedTo, rating, comment } = req.body;
 
     // Validate required fields
-    if (!ride || !ratedTo || !rating) {
+    if (!ride || !raatedTo || !rating) {
         throw new ApiError(400, "All fields are required");
     }
 
