@@ -15,7 +15,6 @@ const AddAmountScreen = () => {
         placeholder="Enter Amount"
         keyboardType="numeric"
       />
-      <Text>check</Text>
       <TouchableOpacity style={styles.addPaymentMethodButton}>
         <Text style={styles.addPaymentMethodText}>Add payment Method</Text>
       </TouchableOpacity>
