@@ -6,10 +6,10 @@ import Home from '../Screens/Home';
 import Wallet from '../Screens/Wallet';
 import Offer from '../Screens/Offer';
 import HomeIcon from '../assets/images/svg/Home.svg';
-import Heart from '../assets/images/svg/Heart.svg';
+import Heart from '../assets/images/svg/heart.svg';
 import Vector from '../assets/images/svg/Vector.svg';
 import WalletIcon from '../assets/images/svg/wallet.svg';
-import Discount from '../assets/images/svg/Discount.svg';
+import Discount from '../assets/images/svg/discount.svg';
 import Favourite from '../Screens/Favourite/index'
 import ProfileScreen from '../Screens/ProfileBotto';
 const Tab = createBottomTabNavigator();
