@@ -18,7 +18,7 @@ const LoginScreen = ({navigation}: {navigation: any}) => {
     const handleLogin = async () => {
         try {
             const response = await post({
-                path: 'http://192.168.31.111:8000/api/v1/users/login',
+                path: 'https://ridebookingapp-backened-1.onrender.com/api/v1/users/login',
                 data: {
                     email: emailOrPhone,
                     password: password,
