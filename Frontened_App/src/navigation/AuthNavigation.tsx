@@ -54,16 +54,16 @@ export default function AuthNavigation() {
         <Stack.Screen name="AddAmountScreen" component={AddAmountScreen} />
         <Stack.Screen name="ComplainScreen" component={ComplainScreen} />
         <Stack.Screen 
-        name="SelectTransport" 
-        component={SelectTransportScreen} 
-      />
-      <Stack.Screen 
-        name="AvailableVehiclesScreen" 
-        component={AvailableVehiclesScreen} 
-      />
-       <Stack.Screen name="CarDetails" component={CarDetailsScreen} options={{ title: 'Car Details' }} />
-       <Stack.Screen name="VehicleDetailsScreen" component={VechicleDetailScreen} />
-       <Stack.Screen name="DEtailScreenVehicles" component={DEtailScreenVehicles} />
+          name="SelectTransport" 
+          component={SelectTransportScreen} 
+        />
+        <Stack.Screen 
+          name="AvailableVehiclesScreen" 
+          component={AvailableVehiclesScreen} 
+        />
+        <Stack.Screen name="CarDetails" component={CarDetailsScreen} options={{ title: 'Car Details' }} />
+        <Stack.Screen name="VehicleDetailsScreen" component={VechicleDetailScreen} />
+        <Stack.Screen name="DEtailScreenVehicles" component={DEtailScreenVehicles} />
       </Stack.Navigator>
     </NavigationContainer>
   );

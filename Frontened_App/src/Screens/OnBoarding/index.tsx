@@ -2,10 +2,21 @@ import { useNavigation } from "@react-navigation/native";
 import React, { useRef } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity, Pressable } from "react-native";
 import Swiper from "react-native-swiper";
+import { useSelector } from "react-redux";
 
 const Onboarding = () => {
   const navigation = useNavigation();
   const swiperRef = useRef(null); 
+
+  // Check userData for access and refresh tokens from Redux, navigate if present
+
+  const userData = useSelector((state: any) => state.auth?.userData);
+
+  React.useEffect(() => {
+    if (userData?.accessToken && userData?.refreshToken) {
+      navigation.navigate("HomeScreen");
+    }
+  }, [userData]);
 
   const data = [
     {

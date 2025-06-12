@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { post } from '../../api'; // Adjust the import path as needed
+import { BASE_URL, post } from '../../api'; // Adjust the import path as needed
 import { useDispatch } from 'react-redux';
 import { setUser } from '../../redux/slices/userSlice';
 import { setTokens } from '@/src/redux/slices/tokenSlice';
@@ -15,15 +15,32 @@ const LoginScreen = ({navigation}: {navigation: any}) => {
     const [password, setPassword] = useState('');
     const dispatch = useDispatch();
 
+    type LoginResponse = {
+        accessToken: string;
+        refreshToken: string;
+        user: {
+            id: string;
+            email: string;
+            fullName: string;
+            profileImage?: string;
+            address?: string;
+            street?: string;
+            district?: string;
+            city?: string;
+            state?: string;
+            zipCode?: string;
+            phone?: string;
+        };
+    };
+
     const handleLogin = async () => {
         try {
-            const response = await post({
-                path: 'https://ridebookingapp-backened-1.onrender.com/api/v1/users/login',
+            const response = await post<LoginResponse>({
+                path: `${BASE_URL}/api/v1/users/login`,
                 data: {
                     email: emailOrPhone,
                     password: password,
                 },
-
             });
 
             // Check if the response is successful
@@ -49,9 +66,9 @@ const LoginScreen = ({navigation}: {navigation: any}) => {
                 // Handle navigation after successful login
                 navigation.navigate('BottomNavigation');
             }
-        } catch (error) {
+        } catch (error: any) {
             console.log(error); // Log the error for debugging
-            Alert.alert('Login Failed', error.response?.data?.message || 'An error occurred');
+            Alert.alert('Login Failed', error?.response?.data?.message || 'An error occurred');
         }
     };
 

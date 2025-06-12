@@ -1,18 +1,17 @@
-import axios, {AxiosResponse} from 'axios';
-import NetInfo from '@react-native-community/netinfo';
-import {store} from '../redux/store';
+import axios, { AxiosResponse, AxiosRequestConfig } from 'axios';
+import { store } from '../redux/store';
 import {
   buttonLoader,
   startLoader,
   stopLoader,
 } from '../redux/slices/activityIndicatorSlice';
-import {addGetResponse} from '../redux/slices/getResponseSlice';
-import {addParams, clearParams} from '../redux/slices/paramsSlice';
+import { addGetResponse } from '../redux/slices/getResponseSlice';
+import { addParams, clearParams } from '../redux/slices/paramsSlice';
 import { getStoredTokens } from '../methods/tokens';
 import { showAlert } from '../redux/slices/alertSlice';
+import NetInfo from '@react-native-community/netinfo';
 
-export const BASE_URL = 'http://192.168.31.111:8000';
-
+export const BASE_URL = 'https://ridebookingapp-backened-1.onrender.com/api/v1';
 
 const axiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -24,10 +23,14 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
   async (config) => {
-    const {jwt} = getStoredTokens();
+    const { jwt } = await getStoredTokens();
     console.log('JWT: ', jwt);
     if (jwt) {
-      config.headers.Authorization = `Bearer ${jwt}`;
+      if (config.headers) {
+        config.headers['Authorization'] = `Bearer ${jwt}`;
+      } else {
+        (config.headers as Record<string, string>)['Authorization'] = `Bearer ${jwt}`;
+      }
     }
     return config;
   },
@@ -40,13 +43,10 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    // Extract status and data from the error response
+    const { status, data } = error.response || {};
 
-    const {status, data} = error.response || {};
+    console.log('data message: ', data?.message);
 
-    console.log('data message: ', data.message);
-
-    // Log full error for debugging purposes
     console.log('Error: ', error);
 
     if (status === 401) {
@@ -106,29 +106,24 @@ axiosInstance.interceptors.response.use(
       );
     }
 
-    // Optional: Log the error to a monitoring service like Sentry, etc.
     console.error('Error intercepted:', error);
 
     return Promise.reject(error);
   },
 );
 
-// Create a queue to hold pending requests
-// const requestQueue: ((token: string) => void)[] = [];
-// let isRefreshing = false;
-
-const executeRequest = async <T,>(
+const executeRequest = async <T>(
   requestFunction: (
     path: string,
-    data?: any,
-  ) => Promise<AxiosResponse<Api & T, any>>,
+    data?: Record<string, unknown> | FormData | string,
+  ) => Promise<AxiosResponse<T>>,
   path: string,
-  data?: any,
+  data?: Record<string, unknown> | FormData | string,
   multipart: boolean = false,
   type: string = 'post',
   onSuccess?: () => void,
-) => {
-  const {isConnected} = await NetInfo.fetch();
+): Promise<T | undefined> => {
+  const { isConnected } = await NetInfo.fetch();
   try {
     if (!isConnected) {
       throw new Error('No Internet connection');
@@ -138,76 +133,68 @@ const executeRequest = async <T,>(
     store.dispatch(buttonLoader());
     store.dispatch(clearParams());
 
-    let response: AxiosResponse<Api & T, any>;
+    let response: AxiosResponse<T>;
 
     if (multipart) {
-      const config = {
-        method: type,
+      const config: AxiosRequestConfig = {
+        method: type as AxiosRequestConfig['method'],
         url: BASE_URL + path,
         maxBodyLength: Infinity,
         headers: {
           'Content-Type': 'multipart/form-data',
         },
         transformRequest: [
-          (data1: any) => {
+          (data1: unknown) => {
             return data1;
           },
         ],
         data: data,
       };
-      response = await axiosInstance.request(config);
+      response = await axiosInstance.request<T>(config);
     } else {
       response = await requestFunction(path, data);
     }
-    if (response.data.message) {
+    if ((response.data as Record<string, unknown>)?.message) {
       store.dispatch(
         showAlert({
           type: 'Message',
-          message: response.data.message,
+          message: (response.data as Record<string, unknown>).message as string,
           onSuccess: onSuccess,
         }),
       );
     }
-    //! Toast message here to show completion of POST/PUT request
     return response?.data;
-  } catch (error: any) {
-    console.log(
-      'Error in this path: ' +
-        path +
-        ' ( status : ' +
-        error.status +
-        ', message: ' +
-        error.message +
-        ' )',
-    );
-
-    // console.log('Here i am: ', error);
-
-    // store.dispatch(
-    //   addAlertData({
-    //     type: 'Alert',
-    //     message:
-    //       error?.data?.message ??
-    //       'Something went wrong, please try again later.',
-    //   }),
-    // );
+  } catch (error: unknown) {
+    if (error && typeof error === 'object' && 'status' in error && 'message' in error) {
+      console.log(
+        'Error in this path: ' +
+          path +
+          ' ( status : ' +
+          (error as { status: string }).status +
+          ', message: ' +
+          (error as { message: string }).message +
+          ' )',
+      );
+    } else {
+      console.log('Error in this path: ' + path, error);
+    }
     throw error;
   } finally {
     store.dispatch(stopLoader());
   }
 };
 
-const get = async <T,>({
+const get = async <T>({
   path,
   params,
   noLoader = false,
 }: {
   path: string;
-  params?: any;
+  params?: Record<string, unknown>;
   noLoader?: boolean;
-}): Promise<T> => {
-  let persistedState = store.getState().getResponseState[path];
-  const {isConnected} = await NetInfo.fetch();
+}): Promise<T | undefined> => {
+  let persistedState = store.getState().getResponseState[path] as T | undefined;
+  const { isConnected } = await NetInfo.fetch();
   try {
     if (!isConnected) {
       if (!persistedState) {
@@ -219,23 +206,27 @@ const get = async <T,>({
       store.dispatch(startLoader());
     }
     store.dispatch(addParams(params));
-    const response = await axiosInstance.get<any>(path);
-    store.dispatch(addGetResponse({path, response: response?.data}));
+    const response = await axiosInstance.get<T>(path);
+    store.dispatch(addGetResponse({ path, response: response?.data }));
     return response?.data;
-  } catch (error: any) {
-    console.log(
-      'Error in this path: ' +
-        path +
-        ' ( status : ' +
-        error.status +
-        ', message: ' +
-        error.message,
-      +' )',
-    );
-    persistedState = store.getState().getResponseState[path];
+  } catch (error: unknown) {
+    if (error && typeof error === 'object' && 'status' in error && 'message' in error) {
+      console.log(
+        'Error in this path: ' +
+          path +
+          ' ( status : ' +
+          (error as { status: string }).status +
+          ', message: ' +
+          (error as { message: string }).message +
+          ' )',
+      );
+    } else {
+      console.log('Error in this path: ' + path, error);
+    }
+    persistedState = store.getState().getResponseState[path] as T | undefined;
 
     if (!persistedState) {
-      console.log('Persisted state in get req not found', error.message);
+      console.log('Persisted state in get req not found', (error as Error).message);
     }
     return persistedState;
   } finally {
@@ -245,24 +236,24 @@ const get = async <T,>({
   }
 };
 
-const post = async <T,>({
+const post = async <T>({
   path,
   data,
   isUrlEncoded = false,
   multipart = false,
 }: {
   path: string;
-  data?: any;
+  data?: Record<string, unknown> | FormData;
   isUrlEncoded?: boolean;
   multipart?: boolean;
-}) => {
-  if (isUrlEncoded) {
+}): Promise<T | undefined> => {
+  if (isUrlEncoded && data && typeof data === 'object' && !(data instanceof FormData)) {
     const body = new URLSearchParams();
     const keys = Object.keys(data);
     keys.forEach((key) => {
-      body.append(key, data[key]);
+      body.append(key, String((data as Record<string, unknown>)[key]));
     });
-    return executeRequest<Api & T>(
+    return executeRequest<T>(
       axiosInstance.post,
       path,
       body.toString(),
@@ -270,7 +261,7 @@ const post = async <T,>({
       'post'
     );
   }
-  return executeRequest<Api & T>(
+  return executeRequest<T>(
     axiosInstance.post,
     path,
     data,
@@ -279,18 +270,18 @@ const post = async <T,>({
   );
 };
 
-const put = async <T,>({
+const put = async <T>({
   path,
   data,
   multipart = false,
   onSuccess = () => {},
 }: {
   path: string;
-  data: any;
+  data: Record<string, unknown> | FormData;
   multipart?: boolean;
   onSuccess?: () => void;
-}) => {
-  return executeRequest<Api & T>(
+}): Promise<T | undefined> => {
+  return executeRequest<T>(
     axiosInstance.put,
     path,
     data,
@@ -300,18 +291,18 @@ const put = async <T,>({
   );
 };
 
-const patch = async <T,>({
+const patch = async <T>({
   path,
   data,
   multipart = false,
   onSuccess = () => {},
 }: {
   path: string;
-  data?: any;
+  data?: Record<string, unknown> | FormData;
   multipart?: boolean;
   onSuccess?: () => void;
-}) => {
-  return executeRequest<Api & T>(
+}): Promise<T | undefined> => {
+  return executeRequest<T>(
     axiosInstance.patch,
     path,
     data,
@@ -321,18 +312,18 @@ const patch = async <T,>({
   );
 };
 
-const deleteApi = async <T,>({
+const deleteApi = async <T>({
   path,
   data,
   multipart = false,
   onSuccess = () => {},
 }: {
   path: string;
-  data?: any;
+  data?: Record<string, unknown> | FormData;
   multipart?: boolean;
   onSuccess?: () => void;
-}) => {
-  return executeRequest<Api & T>(
+}): Promise<T | undefined> => {
+  return executeRequest<T>(
     axiosInstance.delete,
     path,
     data,
@@ -341,4 +332,5 @@ const deleteApi = async <T,>({
     onSuccess,
   );
 };
-export {axiosInstance as http, get, post, put, patch, deleteApi};
+
+export { axiosInstance as http, get, post, put, patch, deleteApi };
